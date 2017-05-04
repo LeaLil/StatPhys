@@ -1,0 +1,22 @@
+# Title
+Test 2: energy, virial, etc. of 2 atoms
+#                 NumberAtoms                 AtomicMass                     MDType
+                            2                          1                          0
+#                  BoxSize(x)                 BoxSize(y)                 BoxSize(z)
+                       10.436                     10.436                     10.436
+#               NumberMDSteps                InitialTime                   TimeStep
+                            1                          0                      0.001
+#          InitialTemperature          TargetTemperature    TemperatureCouplingTime
+                            0                      1.095                        0.1
+#                  RandomSeed
+                     10021988
+#            XVInitialization  CoordInitializationSpread              FinalXVOutput
+                            1                          0                          1
+#          NAtomsOnBoxEdge(x)         NAtomsOnBoxEdge(y)         NAtomsOnBoxEdge(z)
+                           10                         10                         10
+#                   EpsilonLJ                    SigmaLJ    InteractionCutoffRadius
+                            1                          1                        2.5
+#    PropertyPrintingInterval    NumberRadialDistrPoints    RadialDistrCutoffRadius
+                            1                        100                        2.5
+#            TrajectoryOutput     TrajectoryOutputFormat   TrajectoryOutputInterval
+                            0                          2                          5
