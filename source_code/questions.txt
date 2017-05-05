@@ -1,3 +1,2 @@
 -> Müssen verschiedene Atome unterstützt werden?
-
-wär wohl gut.
+-> Muss für > 2 Atome funktionieren?

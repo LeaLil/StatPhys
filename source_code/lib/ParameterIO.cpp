@@ -13,6 +13,7 @@ MDParameters ParameterIO::readParameters(const std::string &fileName) {
 
     MDParameters par;
     int ntxi, ntxo, ntpw, ntt, ntwxm;
+    ntpw = 0; //Set defualt value
     std::string dummy;
 
     getline(fin, dummy);
@@ -198,3 +199,4 @@ void ParameterIO::outputParameters(std::ostream &out, const MDParameters &par) {
         << endl;
 
 }
+
