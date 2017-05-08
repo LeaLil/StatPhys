@@ -1,0 +1,9 @@
+1.) Add k_r and a, D_e-Parameter to input file
+2.) Add 2 new potentials
+3.)
+
+
+99.) Auswertung
+
+
+500000.) Avogardro :D

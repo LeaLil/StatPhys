@@ -47,7 +47,7 @@ set (sources
      lib/PeriodicBoundaryConditions.cpp
      lib/CenterOfMassCalculator.cpp
      lib/RandomNumberGenerator.cpp
-)
+        lib/Potential.cpp lib/Potential.h lib/HarmonicPotential.cpp lib/HarmonicPotential.h lib/LJPotential.cpp lib/LJPotential.cpp lib/LJPotential.h)
 
 add_library(mdatomLib ${sources} ${headers})
 set_target_properties(mdatomLib PROPERTIES POSITION_INDEPENDENT_CODE ON)

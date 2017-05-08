@@ -1,4 +1,5 @@
 #include "InteractionCalculator.h"
+#include "LJPotential.h"
 #include <cmath>
 
 inline int nearestInteger(double x) {
@@ -69,12 +70,13 @@ void InteractionCalculator::calculateSquaredDistance() {
 }
 
 void InteractionCalculator::calculatePotentialAndForceMagnitude() {
-    double riji2 = 1.0 / rij2; // inverse inter-particle distance squared
-    double riji6 = riji2 * riji2 * riji2; // inverse inter-particle distance (6th power)
-    double crh = c12 * riji6;
-    double crhh = crh - c6; //  L-J potential work variable
-    eij= crhh * riji6;
-    dij= 6. * (crh + crhh) * riji6 * riji2;
+    double r = sqrt(rij2);
+    Potential *potential = new LJPotential(r, r, par.sigmaLJ, par.epsilonLJ);
+
+    //Avogadro
+    eij= potential->computePotential();
+    dij = potential->computeForceMagnitude();
+
 }
 
 void InteractionCalculator::calculateForceAndVirialContributions(int i, int j, std::vector<double>& forces) {
