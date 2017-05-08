@@ -1,2 +1,3 @@
 -> Müssen verschiedene Atome unterstützt werden?
 -> Muss für > 2 Atome funktionieren?
+-> Wie viel darf umgeschrieben werden oO?
