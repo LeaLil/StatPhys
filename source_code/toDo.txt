@@ -1,10 +1,11 @@
 1.) Add k_r and a, D_e-Parameter to input file
-2.) Add 2 new potentials
+2.) implement potential parameters in MDParameters for E_pot,tot
 
 3.) E_torsion potential
 4.) E_cov Potential from bond (hamonic), angles (harmonic) and torsion
 5.) E_coulomb Potential
 6.) E_pot,tot (vdW, Coul, Cov)
+
 
 
 99.) Auswertung
