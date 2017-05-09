@@ -2,3 +2,6 @@ Referenzen
 
 http://sites.chem.colostate.edu/diverdi/C475/experiments/quantum_computation_methods/references/j_chem_phys_1941_v9_p61.pdf
 http://www.chemgapedia.de/vsengine/vlu/vsc/de/ch/15/thc/bindung/tc022_h2plus.vlu/Page/vsc/de/ch/15/thc/bindung/morse_potential.vscml.html
+
+https://content.sakai.rutgers.edu/access/content/user/kparis/biomaps_513_references/02_D_01_JACS117_5179_Cornell.pdf
+http://ambermd.org/

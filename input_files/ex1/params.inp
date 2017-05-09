@@ -11,7 +11,7 @@ Test 1: energy, virial, etc. of 2 atoms
 #                  RandomSeed
                      10021988
 #   CoordInitializationSpread              FinalXVOutput
-                            1                          0                          1
+                            1                          1                          1
 #          NAtomsOnBoxEdge(x)         NAtomsOnBoxEdge(y)         NAtomsOnBoxEdge(z)
                            10                         10                         10
 #                   EpsilonLJ                    SigmaLJ    InteractionCutoffRadius
