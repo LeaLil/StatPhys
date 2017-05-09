@@ -14,5 +14,6 @@ HarmonicPotential::HarmonicPotential(double kr, double r, double r0) : Potential
 
 
 double HarmonicPotential::computeForceMagnitude() {
-    return 0.0;
+    return - kr * (r-r0);
 }
+

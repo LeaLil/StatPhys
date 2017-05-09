@@ -1,5 +1,7 @@
 #include "InteractionCalculator.h"
 #include "LJPotential.h"
+#include "HarmonicPotential.h"
+#include "MorsePotential.h"
 #include <cmath>
 
 inline int nearestInteger(double x) {
@@ -71,8 +73,9 @@ void InteractionCalculator::calculateSquaredDistance() {
 
 void InteractionCalculator::calculatePotentialAndForceMagnitude() {
     double r = sqrt(rij2);
-    Potential *potential = new LJPotential(r, r, par.sigmaLJ, par.epsilonLJ);
-
+   // Potential *potential = new LJPotential(r, r, par.sigmaLJ, par.epsilonLJ);
+    //Potential *potential = new HarmonicPotential(1, r, 0.01);
+    Potential *potential = new MorsePotential(r, 0.11, 1, 1);
     //Avogadro
     eij= potential->computePotential();
     dij = potential->computeForceMagnitude();

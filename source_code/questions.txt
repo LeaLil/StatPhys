@@ -1,3 +1,5 @@
 -> Müssen verschiedene Atome unterstützt werden?
 -> Muss für > 2 Atome funktionieren?
 -> Wie viel darf umgeschrieben werden oO?
+-> Equilibrium-Abstand zwischen 2 Atomen?!? Parameter? Was genau ist k_r?!? --> Taylor expansion?
+-> Dissoziationsenergie?!?
