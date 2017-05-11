@@ -3,3 +3,6 @@
 -> Wie viel darf umgeschrieben werden oO?
 -> Equilibrium-Abstand zwischen 2 Atomen?!? Parameter? Was genau ist k_r?!? --> Taylor expansion?
 -> Dissoziationsenergie?!?
+
+-> bond angle terms - welche genau?
+-> coulomb intramolekular, wie werden Ladungen berechnet?

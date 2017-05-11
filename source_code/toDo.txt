@@ -1,11 +1,15 @@
-1.) Add k_r and a, D_e-Parameter to input file
-2.) implement potential parameters in MDParameters for E_pot,tot
+1.) Add k_r and a, D_e-Parameter to input file --> 8.)
+2.) implement potential parameters in MDParameters for E_pot,tot --> 8.)
 
-3.) E_torsion potential
-4.) E_cov Potential from bond (hamonic), angles (harmonic) and torsion
-5.) E_coulomb Potential
-6.) E_pot,tot (vdW, Coul, Cov)
+3.) E_torsion potential (done)
+4.) E_cov Potential from bond (hamonic), angles (harmonic) and torsion (done)
+5.) E_coulomb Potential (done)
+6.) E_pot,tot (vdW, Coul, Cov) (done)
 
+7.) Alle nötigen Parameter in MDParameter implementieren
+8.) Moleküle festlegen, Liste oder so (zwischen welchen Atomen wirken welche Kräfte...)
+
+9.) r0 rausnehmen wo nicht nötig
 
 
 99.) Auswertung

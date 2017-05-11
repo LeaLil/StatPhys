@@ -25,7 +25,7 @@ public:
 
     double computePotential() override;
 
-    double computeForceMagnitude() override ;
+    double computeForceMagnitude() override;
 
 
 };

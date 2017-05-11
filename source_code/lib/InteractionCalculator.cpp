@@ -2,6 +2,7 @@
 #include "LJPotential.h"
 #include "HarmonicPotential.h"
 #include "MorsePotential.h"
+#include "TotalPotential.h"
 #include <cmath>
 
 inline int nearestInteger(double x) {
@@ -75,7 +76,9 @@ void InteractionCalculator::calculatePotentialAndForceMagnitude() {
     double r = sqrt(rij2);
    // Potential *potential = new LJPotential(r, r, par.sigmaLJ, par.epsilonLJ);
     //Potential *potential = new HarmonicPotential(1, r, 0.01);
-    Potential *potential = new MorsePotential(r, 0.11, 1, 1);
+    //Potential *potential = new MorsePotential(r, 0.11, 1, 1);
+
+    Potential *potential = (Potential *) new TotalPotential(r, r, 1, par); //that wasn't me.."cast to Potential*" why?
     //Avogadro
     eij= potential->computePotential();
     dij = potential->computeForceMagnitude();
