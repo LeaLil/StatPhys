@@ -9,10 +9,9 @@
 class Potential {
 public:
 
-    Potential(double r, double r0);
+    Potential(double r);
 
     double r; //Variable radius
-    double r0; //Equilibrium radius / Bond length
 
     double potential = 0;
 

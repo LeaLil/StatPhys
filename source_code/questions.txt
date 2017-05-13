@@ -1,8 +1,9 @@
 -> Müssen verschiedene Atome unterstützt werden?
 -> Muss für > 2 Atome funktionieren?
 -> Wie viel darf umgeschrieben werden oO?
--> Equilibrium-Abstand zwischen 2 Atomen?!? Parameter? Was genau ist k_r?!? --> Taylor expansion?
+-> Equilibrium-Abstand zwischen 2 Atomen?!? Parameter? Was genau ist k_r?!? --> Taylor expansion?: Gemäss Cornell müssten die Werte im params.inp mitgegeben werden.
 -> Dissoziationsenergie?!?
+-> Torsions?!? E_vdw bei Aufgabe b?!?!? Ist der Molekülaufbau irgendwie bekannt
 
 -> bond angle terms - welche genau?
 -> coulomb intramolekular, wie werden Ladungen berechnet?

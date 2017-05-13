@@ -4,9 +4,9 @@
 
 #include "TorsionPotential.h"
 
+//Gamma is equilibriumAngle
 
-
-TorsionPotential::TorsionPotential(double r, double r0, double omega, double gamma) : Potential(r, r0), omega(omega), gamma(gamma) {}
+TorsionPotential::TorsionPotential(double r, double omega, double equilibriumAngle) : Potential(r), omega(omega), equilibriumAngle(equilibriumAngle) {}
 
 double TorsionPotential::computePotential(){
     return 0;

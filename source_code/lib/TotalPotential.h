@@ -11,16 +11,16 @@
 #include "CoulombPotential.h"
 #include "CovalentPotential.h"
 
-class TotalPotential : Potential {
+class TotalPotential : public Potential {
 
 public:
     bool angleterms;
-    LJPotential *vdw;
-    CoulombPotential *coul;
-    CovalentPotential *cov;
+    Potential *vdw;
+    Potential *coul;
+    Potential *cov;
     MDParameters par;
 
-    TotalPotential(double r, double r0, bool angleterms, const MDParameters &par);
+    TotalPotential(double r, bool useAngleTerms, const MDParameters &par);
 
     double computePotential() override;
 

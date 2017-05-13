@@ -11,8 +11,9 @@
 class HarmonicPotential : public Potential {
 public:
     double kr;
+    double r0;
 
-    HarmonicPotential(double kr, double r, double r0);
+    HarmonicPotential(double r, double r0, double kr);
 
     double computePotential() override;
 

@@ -11,7 +11,7 @@
 #include "TorsionPotential.h"
 #include "MDParameters.h"
 
-class CovalentPotential : Potential{
+class CovalentPotential : public Potential{
 
 public:
     bool withangle;
@@ -21,7 +21,7 @@ public:
     TorsionPotential *dihedral;
     MDParameters par;
 
-    CovalentPotential(double r, double r0, MDParameters par, bool withangle);
+    CovalentPotential(double r, MDParameters par, bool withangle);
 
     double computePotential() override;
 

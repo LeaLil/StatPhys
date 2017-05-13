@@ -15,10 +15,10 @@ public:
     double q2;
 
     // k_c = 1/4*pi*e_0; using electric field constant e_0 in C²/Nm² wrong?
-    // TO DO find correct values and dimensions: nm, ps, e...
+    // TODO find correct values and dimensions: nm, ps, e...
     double k_c = 1;
 
-    CoulombPotential(double r, double r0, double q1, double q2);
+    CoulombPotential(double r, double q1, double q2);
 
     double computePotential() override;
 

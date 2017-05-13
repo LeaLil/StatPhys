@@ -14,6 +14,7 @@ public:
 
     double d_e;
     double a; //a = sqrt(kr/2d_e)
+    double r0;
 
     double computePotential() override;
 

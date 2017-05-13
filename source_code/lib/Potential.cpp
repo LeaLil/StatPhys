@@ -4,9 +4,9 @@
 
 #include "Potential.h"
 
-Potential::Potential(double r, double r0) {
+Potential::Potential(double r) {
     this->r = r;
-    this->r0 = r0;
+
 }
 
 double Potential::computePotential() {

@@ -78,7 +78,7 @@ void InteractionCalculator::calculatePotentialAndForceMagnitude() {
     //Potential *potential = new HarmonicPotential(1, r, 0.01);
     //Potential *potential = new MorsePotential(r, 0.11, 1, 1);
 
-    Potential *potential = (Potential *) new TotalPotential(r, r, 1, par); //that wasn't me.."cast to Potential*" why?
+    Potential *potential = new TotalPotential(r, true, par); //You forgot a "public" beim Erben :-) Please don't use 1/0 for true/false
     //Avogadro
     eij= potential->computePotential();
     dij = potential->computeForceMagnitude();

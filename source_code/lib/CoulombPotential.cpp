@@ -6,7 +6,7 @@
 #include <math.h>
 
 
-CoulombPotential::CoulombPotential(double r, double r0, double q1, double q2) : Potential(r, r0), q1(q1), q2(q2) {}
+CoulombPotential::CoulombPotential(double r, double q1, double q2) : Potential(r), q1(q1), q2(q2) {}
 
 double CoulombPotential::computePotential() {
 

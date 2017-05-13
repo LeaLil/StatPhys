@@ -57,6 +57,11 @@ struct MDParameters {
     bool trajectoryOutput;
     TrajectoryFileFormat trajectoryOutputFormat;
     int trajectoryOutputInterval;
+    double forceConstant; //K_r
+    double equilibriumAngle;
+    double equilibriumDistance;
+    double dissociationEnergy;
+    double inflexibility;
 };
 
 FinalCoordinateFileFormat finalCoordinateFileFormatFromInt(int ntxo);

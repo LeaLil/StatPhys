@@ -13,9 +13,9 @@ class TorsionPotential : public Potential {
 public:
 
     double omega;
-    double gamma;
+    double equilibriumAngle; //equilibriumAngle
 
-    TorsionPotential(double r, double r0, double omega, double gamma);
+    TorsionPotential(double r, double omega, double equilibriumAngle);
 
     double computePotential() override;
 

@@ -8,7 +8,7 @@
 #include <math.h>
 
 
-LJPotential::LJPotential(double r, double r0, double sigma, double epsilon) : Potential(r, r0), sigma(sigma), epsilon(epsilon) {}
+LJPotential::LJPotential(double r, double sigma, double epsilon) : Potential(r), sigma(sigma), epsilon(epsilon) {}
 
 
 double LJPotential::computePotential() {

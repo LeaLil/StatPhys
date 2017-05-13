@@ -5,7 +5,7 @@
 #include "MorsePotential.h"
 #include <math.h>
 
-MorsePotential::MorsePotential(double r, double r0, double d_e, double a) : Potential(r, r0), d_e(d_e), a(a) {}
+MorsePotential::MorsePotential(double r, double r0, double d_e, double a) : Potential(r), r0(r0), d_e(d_e), a(a) {}
 
 // calculate potential
 double MorsePotential::computePotential() {

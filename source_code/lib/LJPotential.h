@@ -15,7 +15,7 @@ public:
     double epsilon;
 
 
-    LJPotential(double r, double r0, double sigma, double epsilon);
+    LJPotential(double r, double sigma, double epsilon);
 
 
     double computePotential() override;

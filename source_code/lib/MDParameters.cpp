@@ -31,6 +31,11 @@ MDParameters MDParameters::defaultParameters() {
     p.trajectoryOutputFormat = TrajectoryFileFormat::ascii;
     p.numberRadialDistrPoints = 100;
     p.radialDistrCutoffRadius = 2.5;
+    p.forceConstant = 1; //Federkonstante, default value
+    p.equilibriumAngle = 0;
+    p.equilibriumDistance = 1;
+    p.dissociationEnergy = 1;
+    p.inflexibility = 1;
     return p;
 }
 

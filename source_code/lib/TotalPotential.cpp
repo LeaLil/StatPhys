@@ -3,14 +3,15 @@
 //
 
 #include "TotalPotential.h"
+#include "MorsePotential.h"
 
 
-TotalPotential::TotalPotential(double r, double r0, bool angleterms, const MDParameters &par) : Potential(r, r0),
-                                                                                                angleterms(angleterms),
+TotalPotential::TotalPotential(double r, bool useAngleTerms, const MDParameters &par) : Potential(r), angleterms(useAngleTerms),
                                                                                                 par(par) {
-    cov = new CovalentPotential(r, r0, par, angleterms);
-    vdw = new LJPotential(r, r0, par.sigmaLJ, par.epsilonLJ);
-    coul = new CoulombPotential(r, r0, 1, 1); //TO DO implement q1, q2 in MDParameters
+    cov = new CovalentPotential(r, par, useAngleTerms);
+   // vdw = new LJPotential(r, par.sigmaLJ, par.epsilonLJ);
+    vdw = new MorsePotential(r, par.equilibriumDistance, par.dissociationEnergy, par.inflexibility);
+    coul = new CoulombPotential(r, 1, 1); //TODO implement q1, q2
 }
 
 double TotalPotential::computePotential() {

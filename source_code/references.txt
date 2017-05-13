@@ -5,3 +5,6 @@ http://www.chemgapedia.de/vsengine/vlu/vsc/de/ch/15/thc/bindung/tc022_h2plus.vlu
 
 https://content.sakai.rutgers.edu/access/content/user/kparis/biomaps_513_references/02_D_01_JACS117_5179_Cornell.pdf
 http://ambermd.org/
+
+
+http://www.ks.uiuc.edu/Research/namd/2.9/ug/node22.html

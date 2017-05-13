@@ -5,13 +5,13 @@
 #include "CovalentPotential.h"
 
 
-CovalentPotential::CovalentPotential(double r, double r0, MDParameters par, bool withangle) : Potential(r, r0),
+CovalentPotential::CovalentPotential(double r, MDParameters par, bool withangle) : Potential(r),
                                                                                               par(par),
                                                                                               withangle(withangle) {
 
-    bonds = new HarmonicPotential(1, r, r0); //TO DO: implement kr in MDParameters
-    angles = new HarmonicPotential(1, r, r0); // "
-    dihedral = new TorsionPotential(r, r0, 1, 1); //TO DO: implement omega and gamma in MDParameters
+    bonds = new HarmonicPotential(r, par.equilibriumDistance, par.forceConstant);
+    angles = new HarmonicPotential(r, par.equilibriumDistance, par.forceConstant); //TODO: Spring constant same for Angles and bonds?
+    dihedral = new TorsionPotential(r, 1, par.equilibriumAngle); //TODO: implement omega and gamma in MDParameters
 }
 
 double CovalentPotential::computePotential() {
