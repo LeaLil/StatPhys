@@ -16,3 +16,8 @@ double Potential::computePotential() {
 double Potential::computeForceMagnitude() {
     return 0;
 }
+
+Potential::~Potential() {
+
+
+}

@@ -22,3 +22,9 @@ double TotalPotential::computeForceMagnitude() {
     return cov->computeForceMagnitude() + vdw->computeForceMagnitude() + coul->computeForceMagnitude();
 }
 
+TotalPotential::~TotalPotential() {
+    delete cov;
+    delete vdw;
+    delete coul;
+
+}

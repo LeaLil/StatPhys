@@ -25,3 +25,9 @@ double CovalentPotential::computeForceMagnitude() {
     return bonds->computeForceMagnitude() + angles->computeForceMagnitude() + dihedral->computeForceMagnitude();
 }
 
+CovalentPotential::~CovalentPotential() {
+    delete bonds;
+    delete angles;
+    delete dihedral;
+
+}

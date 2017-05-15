@@ -17,6 +17,8 @@ public:
 
     virtual double computePotential();
     virtual double computeForceMagnitude();
+
+    virtual ~Potential();
 };
 
 

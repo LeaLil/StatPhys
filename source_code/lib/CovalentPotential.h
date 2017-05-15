@@ -27,6 +27,8 @@ public:
 
     double computeForceMagnitude() override;
 
+    virtual ~CovalentPotential();
+
 
 };
 

@@ -26,6 +26,8 @@ public:
 
     double computeForceMagnitude() override;
 
+    virtual ~TotalPotential();
+
 
 };
 

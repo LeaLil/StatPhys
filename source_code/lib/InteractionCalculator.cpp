@@ -83,6 +83,8 @@ void InteractionCalculator::calculatePotentialAndForceMagnitude() {
     eij= potential->computePotential();
     dij = potential->computeForceMagnitude();
 
+    delete potential;
+
 }
 
 void InteractionCalculator::calculateForceAndVirialContributions(int i, int j, std::vector<double>& forces) {
