@@ -2,6 +2,10 @@
 
 import re,string
 import sys
+import re, string
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 f = open(sys.argv[1],"r")
 
@@ -25,5 +29,6 @@ while 1:
         #t = string.split(line)
     if pattern2.search(line) != None:
         break
+
 
 

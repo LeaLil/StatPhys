@@ -6,6 +6,7 @@
 #define MDATOM_TOTALPOTENTIAL_H
 
 
+#include <vector>
 #include "Potential.h"
 #include "LJPotential.h"
 #include "CoulombPotential.h"
