@@ -2,6 +2,7 @@
 #define PERIODICBOUNDARYCONDITIONS_H
 
 #include <vector>
+#include "Molecule.h"
 
 /*!
  * This class verifies whether all atoms are located in the simulation box.
@@ -10,8 +11,8 @@
 class PeriodicBoundaryConditions {
   public:
     // Keep atoms in central periodic box
-    static void recenterAtoms(int nat, std::vector<double>& positions, double const * box);
-    static void recenterAtoms(int nat, std::vector<double>& positions, double const * box, double const * origin);
+    static void recenterAtoms(int nat, std::vector<double>& positions, double const * box, std::vector<Molecule> moleculeList);
+    static void recenterAtoms(int nat, std::vector<double>& positions, double const * box, double const * origin,std::vector<Molecule> moleculeList);
 };
 
 #endif // PERIODICBOUNDARYCONDITIONS_H

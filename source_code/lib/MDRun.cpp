@@ -4,12 +4,12 @@
 #include "TrajectoryFileWriter.h"
 #include <cmath>
 
-MDRun::MDRun(const MDParameters& parameters, MDRunOutput& out, TrajectoryFileWriter& trajectoryFileWriter)
+MDRun::MDRun(const MDParameters& parameters, MDRunOutput& out, TrajectoryFileWriter& trajectoryFileWriter, std::vector<Molecule>& moleculeList)
   : par(parameters),
     output(out),
     trajectoryWriter(trajectoryFileWriter),
     forceCalculator(parameters),
-    radialDistribution(parameters.numberRadialDistrPoints, parameters.radialDistrCutoffRadius) {
+    radialDistribution(parameters.numberRadialDistrPoints, parameters.radialDistrCutoffRadius), moleculeList(moleculeList) {
 }
 
 void MDRun::run(std::vector<double> &x, std::vector<double> &v) {
@@ -27,7 +27,7 @@ void MDRun::run(std::vector<double> &x, std::vector<double> &v) {
     double time = par.initialTime;
     for (int nstep = 0; nstep < par.numberMDSteps; nstep++) {
         time += par.timeStep;
-        performStep(x, v, nstep, time);
+        performStep(x, v, moleculeList, nstep, time);
     }
 
     printAverages(time);
@@ -77,14 +77,14 @@ void MDRun::initializeTemperature(const std::vector<double>& velocities) {
     }
 }
 
-void MDRun::performStep(std::vector<double>& positions, std::vector<double>& velocities, int nstep, double time) {
+void MDRun::performStep(std::vector<double>& positions, std::vector<double>& velocities, std::vector<Molecule>& moleculeList, int nstep, double time) {
     /* put atoms in central periodic box */
-    PeriodicBoundaryConditions::recenterAtoms(par.numberAtoms, positions, par.boxSize);
+    PeriodicBoundaryConditions::recenterAtoms(par.numberAtoms, positions, par.boxSize, moleculeList);
 
     /* calculate forces, potential energy, virial
      * and contribution to the radial distribution function
      */
-    forceCalculator.calculate(positions, forces);
+    forceCalculator.calculate(positions, forces, moleculeList);
     radialDistribution.addInstantaneousDistribution(forceCalculator.getInstantaneousRadialDistribution());
     double vir = forceCalculator.getVirial();
     properties[2] = forceCalculator.getPotentialEnergy();

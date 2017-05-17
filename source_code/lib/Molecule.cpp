@@ -5,6 +5,7 @@
 #include "Molecule.h"
 #include "Element.h"
 
+Molecule::Molecule(std::vector<Element> &elementList) : elementList(elementList) {}
 
 Point Molecule::computeGravityCenter() {
     Point gravityCenter;
@@ -25,4 +26,11 @@ double Molecule::computeDistanceToMolecule(Molecule m) {
     Point p2 = m.computeGravityCenter();
 
     p.computeDistanceToOtherPoint(p2);
+}
+
+void Molecule::calculateInteraction(Molecule m) {
+    //Apply boundary conditions
+    //Compute new distance
+    //calculate force and magnitude
+    //calculateForceAndVirialContributions
 }

@@ -6,6 +6,10 @@
 #include "Point.h"
 
 
+Point::Point() {}
+
+Point::Point(double x, double y, double z) : x(x), y(y), z(z) {}
+
 double Point::computeDistanceToOtherPoint(Point otherPoint) {
     double deltaX = otherPoint.x - x;
     double deltaY = otherPoint.y - y;
@@ -36,4 +40,17 @@ Point &Point::operator+=(const Point point1) {
     y = point1.y;
     z = point1.z;
     return *this;
+}
+
+double& Point::getPointByNumber(int i) {
+        switch(i){
+
+            case 0:
+                return x;
+            case 1:
+                return y;
+            case 2:
+                return z;
+        }
+
 }

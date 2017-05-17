@@ -14,13 +14,15 @@ class Molecule {
 
 
 public:
+    Molecule(std::vector<Element>& elementList);
+
     Molecule(const std::vector<Element> &elementList);
 
     std::vector<Element> elementList;
 
     Point computeGravityCenter();
     double computeDistanceToMolecule(Molecule m);
-
+    void calculateInteraction(Molecule m);
 
 };
 

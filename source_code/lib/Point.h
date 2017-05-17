@@ -9,13 +9,17 @@
 class Point {
 
 public:
+    Point();
+
+    Point(double x, double y, double z);
+
     double computeDistanceToOtherPoint(Point p);
 
     Point &operator*=(const double multiplyByConstant);
     friend Point operator * (const Point &num1, const double factor);
     Point &operator+=(const Point point1);
 
-
+    double& getPointByNumber(int i);
 
 
     double x;

@@ -3,6 +3,7 @@
 
 #include "MDParameters.h"
 #include "InstantaneousRadialDistribution.h"
+#include "Molecule.h"
 
 /*!
  * This class calculates the interactions for the atoms in the systems.
@@ -17,7 +18,7 @@
 class InteractionCalculator{
   public:
     explicit InteractionCalculator(const MDParameters& parameters);
-    void calculate(const std::vector<double>& positions, std::vector<double>& forces);
+    void calculate(const std::vector<double>& positions, std::vector<double>& forces, std::vector<Molecule>& moleculeList);
     double getPotentialEnergy() const;
     double getVirial() const;
     const InstantaneousRadialDistribution& getInstantaneousRadialDistribution() const;

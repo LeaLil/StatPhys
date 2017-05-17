@@ -3,6 +3,7 @@
 #include "HarmonicPotential.h"
 #include "MorsePotential.h"
 #include "TotalPotential.h"
+#include "Molecule.h"
 #include <cmath>
 
 inline int nearestInteger(double x) {
@@ -25,7 +26,7 @@ void InteractionCalculator::initializeValues() {
         inverseBoxLength[m] = 1.0 / par.boxSize[m];
 }
 
-void InteractionCalculator::calculate(const std::vector<double>& positions, std::vector<double>& forces) {
+void InteractionCalculator::calculate(const std::vector<double>& positions, std::vector<double>& forces, std::vector<Molecule>& moleculeList) {
     resetVariablesToZero(forces);
 
     for (int i = 0; i < par.numberAtoms - 1; i++) {
@@ -34,7 +35,16 @@ void InteractionCalculator::calculate(const std::vector<double>& positions, std:
         }
     }
     virial /= 2.;
+
+    //TODO: Interactions for molecules:
+
+    for(int i = 0; i < moleculeList.size(); i++) {
+        for(int j = i; j < moleculeList.size(); j++) {
+            moleculeList[i].calculateInteraction(moleculeList[j]);
+        }
+    }
 }
+
 
 void InteractionCalculator::resetVariablesToZero(std::vector<double>& forces) {
     radialDistribution.setZero();

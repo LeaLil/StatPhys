@@ -48,7 +48,8 @@ void MDSimulation::executeMDIterations() {
     trajectoryWriter.writeBeforeRun();
 
     timer.mdStart();
-    MDRun mdRun(parameters, output, trajectoryWriter);
+    std::vector<Molecule> moleculeList;
+    MDRun mdRun(parameters, output, trajectoryWriter, moleculeList);
     mdRun.run(positions, velocities);
     timer.mdEnd();
 

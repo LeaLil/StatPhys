@@ -6,6 +6,7 @@
 #include "AveragedRadialDistribution.h"
 #include "TrajectoryFileWriter.h"
 #include "InteractionCalculator.h"
+#include "Molecule.h"
 #include <array>
 
 /*!
@@ -18,14 +19,14 @@ class MDRun {
   public:
     using PropertyArray = std::array<double, numberProperties>;
 
-    MDRun(const MDParameters& parameters, MDRunOutput& out, TrajectoryFileWriter& trajectoryFileWriter);
+    MDRun(const MDParameters& parameters, MDRunOutput& out, TrajectoryFileWriter& trajectoryFileWriter, std::vector<Molecule>& moleculeList);
     void run(std::vector<double> &x, std::vector<double> &v);
     const AveragedRadialDistribution& getRadialDistribution() const;
-
+    std::vector<Molecule> moleculeList;
   private:
     void initializeVariables();
     void initializeTemperature(const std::vector<double>& velocities);
-    void performStep(std::vector<double>& positions, std::vector<double>& velocities, int nstep, double time);
+    void performStep(std::vector<double>& positions, std::vector<double>& velocities, std::vector<Molecule>& moleculeList, int nstep, double time);
     void printOutputForStep(const std::vector<double>& positions, const std::vector<double>& velocities, int nstep, double time);
     void printAverages(double time);
 

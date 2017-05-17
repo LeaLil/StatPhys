@@ -7,3 +7,7 @@
 
 -> bond angle terms - welche genau?
 -> coulomb intramolekular, wie werden Ladungen berechnet?
+
+
+
+-> Molecules und periodicBoundary?!?
