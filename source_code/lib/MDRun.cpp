@@ -84,6 +84,7 @@ void MDRun::performStep(std::vector<double>& positions, std::vector<double>& vel
     /* calculate forces, potential energy, virial
      * and contribution to the radial distribution function
      */
+    //TODO
     forceCalculator.calculate(positions, forces, moleculeList);
     radialDistribution.addInstantaneousDistribution(forceCalculator.getInstantaneousRadialDistribution());
     double vir = forceCalculator.getVirial();
@@ -111,6 +112,7 @@ void MDRun::performStep(std::vector<double>& positions, std::vector<double>& vel
         velocities[j3] = newVelocity;
         positions[j3] += newVelocity * par.timeStep;
     }
+
     oldKineticEnergy *= (par.atomicMass / 2.);
     newKineticEnergy *= (par.atomicMass / 8.);
     properties[1] = newKineticEnergy;

@@ -54,3 +54,9 @@ double& Point::getPointByNumber(int i) {
         }
 
 }
+
+
+Point::~Point() {
+
+
+}

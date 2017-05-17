@@ -3,3 +3,8 @@
 //
 
 #include "Element.h"
+
+Element::~Element() {
+    //delete &position;
+
+}

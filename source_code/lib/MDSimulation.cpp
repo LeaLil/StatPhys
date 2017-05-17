@@ -40,7 +40,8 @@ void MDSimulation::checkParameterValidity() {
 
 void MDSimulation::initializeCoordinatesAndVelocities(const std::string& coordinateFile) {
     CoordinatesAndVelocitiesInitializer xvInitializer(output, parameters, coordinateFile);
-    xvInitializer.initialize(positions, velocities);
+
+    xvInitializer.initialize(positions, velocities, moleculeList);
 }
 
 void MDSimulation::executeMDIterations() {

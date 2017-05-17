@@ -4,8 +4,9 @@
 
 #include "Molecule.h"
 #include "Element.h"
+#include "TotalPotential.h"
 
-Molecule::Molecule(std::vector<Element> &elementList) : elementList(elementList) {}
+Molecule::Molecule(std::vector<Element> elementList) : elementList(elementList) {}
 
 Point Molecule::computeGravityCenter() {
     Point gravityCenter;
@@ -21,16 +22,34 @@ Point Molecule::computeGravityCenter() {
     gravityCenter *= totalWeight;
     return gravityCenter;
 }
-double Molecule::computeDistanceToMolecule(Molecule m) {
+
+double Molecule::computeDistanceToMolecule(Molecule &m) {
     Point p = computeGravityCenter();
     Point p2 = m.computeGravityCenter();
 
-    p.computeDistanceToOtherPoint(p2);
+    return p.computeDistanceToOtherPoint(p2);
 }
 
-void Molecule::calculateInteraction(Molecule m) {
+void Molecule::calculateInteraction(Molecule &m, const MDParameters &mdParameters) {
+
     //Apply boundary conditions
+
+
+
+    //Compute
+    double r = computeDistanceToMolecule(m);
+    Potential *potential = new TotalPotential(r, true,
+                                              mdParameters); //You forgot a "public" beim Erben :-) Please don't use 1/0 for true/false
+    //Avogadro
+    double eij = potential->computePotential();
+    double dij = potential->computeForceMagnitude();
+
     //Compute new distance
     //calculate force and magnitude
     //calculateForceAndVirialContributions
+}
+
+Molecule::~Molecule() {
+    //delete &elementList;
+
 }

@@ -3,6 +3,7 @@
 
 #include "MDParameters.h"
 #include "MDRunOutput.h"
+#include "Molecule.h"
 #include <string>
 #include <fstream>
 #include <vector>
@@ -15,7 +16,7 @@ const int MAXTITLE = 200; /* Maximum number of characters for file titles */
 class CoordinatesAndVelocitiesInitializer {
   public:
     CoordinatesAndVelocitiesInitializer(MDRunOutput& mdOutput, const MDParameters& parameters, std::string coordinatesFileName);
-    void initialize(std::vector<double>& positions, std::vector<double>&velocities);
+    void initialize(std::vector<double>& positions, std::vector<double>&velocities, std::vector<Molecule> &moleculeList);
 
   private:
     void generateAtomicConfiguration(std::vector<double>& positions);

@@ -21,6 +21,8 @@ public:
 
     double& getPointByNumber(int i);
 
+    virtual ~Point();
+
 
     double x;
     double y;

@@ -8,6 +8,9 @@
 
 #include "Potential.h"
 
+/*
+ * Intermolekular!
+ */
 class LJPotential : public Potential {
 public:
 

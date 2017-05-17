@@ -11,6 +11,9 @@
 
 class Element {
 public:
+    virtual ~Element();
+
+public:
     double weight;
     std::vector<Element> bondedWith;
 

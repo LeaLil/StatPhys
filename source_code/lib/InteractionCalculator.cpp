@@ -40,7 +40,7 @@ void InteractionCalculator::calculate(const std::vector<double>& positions, std:
 
     for(int i = 0; i < moleculeList.size(); i++) {
         for(int j = i; j < moleculeList.size(); j++) {
-            moleculeList[i].calculateInteraction(moleculeList[j]);
+            moleculeList[i].calculateInteraction(moleculeList[j], par);
         }
     }
 }

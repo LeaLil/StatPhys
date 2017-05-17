@@ -5,6 +5,7 @@
 #include "MDRunOutput.h"
 #include "Timer.h"
 #include "AveragedRadialDistribution.h"
+#include "Molecule.h"
 #include <string>
 #include <vector>
 #include <iostream>
@@ -34,6 +35,7 @@ class MDSimulation {
     Timer timer;
     MDParameters parameters;
     std::vector<double> positions, velocities;
+    std::vector<Molecule> moleculeList;
 };
 
 #endif // MDSIMULATION_H
