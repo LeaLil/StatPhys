@@ -10,6 +10,10 @@ Point::Point() {}
 
 Point::Point(double x, double y, double z) : x(x), y(y), z(z) {}
 
+
+Point Point::getInversePoint() {
+    return Point(1/x, 1/y, 1/z);
+}
 double Point::computeDistanceToOtherPoint(Point otherPoint) {
     double deltaX = otherPoint.x - x;
     double deltaY = otherPoint.y - y;
@@ -27,7 +31,7 @@ Point &Point::operator*=(const double multiplyByConstant) {
 }
 
 
-Point operator*(const Point &num1, const double factor) {
+Point operator *(const Point &num1, const double factor) {
     Point p;
     p.x = num1.x * factor;
     p.y = num1.y * factor;
@@ -35,10 +39,31 @@ Point operator*(const Point &num1, const double factor) {
     return p;
 }
 
+
+double operator * (const Point &num1, const Point &num2) {
+    return num1.x * num2.x + num1.y * num2.y+ num1.z * num2.z;
+}
+Point operator-(const Point &num1, const Point &num2) {
+    Point p = Point(num1.x - num2.x, num1.y - num2.y, num1.z - num2.z);
+    return p;
+}
+
+
+Point operator+(const Point &num1, const Point &num2) {
+    Point p = Point(num1.x + num2.x, num1.y + num2.y, num1.z + num2.z);
+    return p;
+}
+
 Point &Point::operator+=(const Point point1) {
-    x = point1.x;
-    y = point1.y;
-    z = point1.z;
+    x += point1.x;
+    y += point1.y;
+    z += point1.z;
+    return *this;
+}
+Point &Point::operator-=(const Point point1) {
+    x -= point1.x;
+    y -= point1.y;
+    z -= point1.z;
     return *this;
 }
 
@@ -59,4 +84,8 @@ double& Point::getPointByNumber(int i) {
 Point::~Point() {
 
 
+}
+
+double Point::computeLength() {
+    return x*x + y*y + z*z;
 }

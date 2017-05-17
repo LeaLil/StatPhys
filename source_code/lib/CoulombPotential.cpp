@@ -14,7 +14,8 @@ double CoulombPotential::computePotential() {
     //double q1c = q1 / (1.6021 * pow(10, -19));
     //double q2c = q2 / (1.6021 * pow(10, -19));
 
-    return k_c * q1 * q2 * (1/r);
+   //return k_c * q1 * q2 * (1/r);
+   return 0;
 };
 
 double CoulombPotential::computeForceMagnitude() {

@@ -4,9 +4,10 @@
 #include "TrajectoryFileWriter.h"
 #include <cmath>
 
-MDRun::MDRun(const MDParameters& parameters, MDRunOutput& out, TrajectoryFileWriter& trajectoryFileWriter, std::vector<Molecule>& moleculeList)
+MDRun::MDRun(const MDParameters& parameters, MDRunOutput& out, System& s, TrajectoryFileWriter& trajectoryFileWriter, std::vector<Molecule>& moleculeList)
   : par(parameters),
     output(out),
+    s(s),
     trajectoryWriter(trajectoryFileWriter),
     forceCalculator(parameters),
     radialDistribution(parameters.numberRadialDistrPoints, parameters.radialDistrCutoffRadius), moleculeList(moleculeList) {
@@ -37,7 +38,7 @@ void MDRun::initializeVariables() {
     nat3 = 3 * par.numberAtoms;
     const double boltzmannConstant = 8.3144598e-3; // units: K^-1 ps^-2 u nm^2
     fac = nat3 * boltzmannConstant / 2.;
-    ekin0 = fac * par.targetTemperature;
+    s.totalKineticEnergy = ekin0 = fac * par.targetTemperature;
     halfTimeStep = par.timeStep / 2;
     dtm = par.timeStep / par.atomicMass;
     vol = par.boxSize[0] * par.boxSize[1] * par.boxSize[2];
@@ -82,14 +83,13 @@ void MDRun::performStep(std::vector<double>& positions, std::vector<double>& vel
     PeriodicBoundaryConditions::recenterAtoms(par.numberAtoms, positions, par.boxSize, moleculeList);
 
     /* calculate forces, potential energy, virial
-     * and contribution to the radial distribution function
+     * and contribution to the radial distribution function for the whole system
+     * Doesn't apply anything! Just computes stuff!
      */
-    //TODO
     forceCalculator.calculate(positions, forces, moleculeList);
     radialDistribution.addInstantaneousDistribution(forceCalculator.getInstantaneousRadialDistribution());
-    double vir = forceCalculator.getVirial();
+    properties[3] = forceCalculator.getVirial();
     properties[2] = forceCalculator.getPotentialEnergy();
-    properties[3] = vir;
 
     /* determine velocity scaling factor, when coupling to a bath */
     double scal = 1;
@@ -102,26 +102,21 @@ void MDRun::performStep(std::vector<double>& positions, std::vector<double>& vel
      * calculate kinetic energy at time t-dt/2 and at time t,
      * and calculate pressure
      */
-    double oldKineticEnergy = 0.;
-    double newKineticEnergy = 0.;
-    for (int j3 = 0; j3 < nat3; j3++) {
-        double oldVelocity = velocities[j3];
-        double newVelocity = (oldVelocity + forces[j3] * dtm) * scal;
-        oldKineticEnergy += newVelocity * newVelocity;
-        newKineticEnergy += (oldVelocity + newVelocity) * (oldVelocity + newVelocity);
-        velocities[j3] = newVelocity;
-        positions[j3] += newVelocity * par.timeStep;
+    s.oldTotalKineticEnergy = 0.;
+    s.totalKineticEnergy = 0.;
+
+
+    /* Do the same for molecule list; */
+    for(Molecule& m : moleculeList) {
+        m.applyForces(par, scal);
     }
 
-    oldKineticEnergy *= (par.atomicMass / 2.);
-    newKineticEnergy *= (par.atomicMass / 8.);
-    properties[1] = newKineticEnergy;
+    properties[1] = s.oldTotalKineticEnergy;
     properties[0] = properties[1] + properties[2];
-    double pres = 2. * (newKineticEnergy - vir) / (vol * 3.);
-    properties[4] = pres;
+    properties[4] = 2 * (s.totalKineticEnergy - properties[3]) / (vol*3.);
     properties[5] = scal;
     if (par.mdType == SimulationType::constantTemperature) {
-        ekg = oldKineticEnergy;
+        ekg = s.oldTotalKineticEnergy;
     }
 
     /* update arrays for averages and fluctuations */

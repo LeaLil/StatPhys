@@ -19,7 +19,7 @@ class MDRun {
   public:
     using PropertyArray = std::array<double, numberProperties>;
 
-    MDRun(const MDParameters& parameters, MDRunOutput& out, TrajectoryFileWriter& trajectoryFileWriter, std::vector<Molecule>& moleculeList);
+    MDRun(const MDParameters& parameters, MDRunOutput& out, System& s, TrajectoryFileWriter& trajectoryFileWriter, std::vector<Molecule>& moleculeList);
     void run(std::vector<double> &x, std::vector<double> &v);
     const AveragedRadialDistribution& getRadialDistribution() const;
     std::vector<Molecule> moleculeList;
@@ -30,6 +30,7 @@ class MDRun {
     void printOutputForStep(const std::vector<double>& positions, const std::vector<double>& velocities, int nstep, double time);
     void printAverages(double time);
 
+    System& s;
     const MDParameters& par;
     MDRunOutput& output;
     TrajectoryFileWriter& trajectoryWriter;

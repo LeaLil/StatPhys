@@ -10,7 +10,7 @@ MorsePotential::MorsePotential(double r, double r0, double d_e, double a) : Pote
 // calculate potential
 double MorsePotential::computePotential() {
 
-    return d_e * pow((1 - exp(-a * (r-r0))), 2);
+    return d_e * pow(1 - exp(-a * (r-r0)), 2);
 
 };
 

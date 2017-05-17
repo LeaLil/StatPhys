@@ -16,7 +16,7 @@ const int MAXTITLE = 200; /* Maximum number of characters for file titles */
 class CoordinatesAndVelocitiesInitializer {
   public:
     CoordinatesAndVelocitiesInitializer(MDRunOutput& mdOutput, const MDParameters& parameters, std::string coordinatesFileName);
-    void initialize(std::vector<double>& positions, std::vector<double>&velocities, std::vector<Molecule> &moleculeList);
+    void initialize(std::vector<double>& positions, std::vector<double>&velocities, std::vector<Molecule> &moleculeList, System& s);
 
   private:
     void generateAtomicConfiguration(std::vector<double>& positions);

@@ -16,9 +16,11 @@ CovalentPotential::CovalentPotential(double r, MDParameters par, bool withangle)
 
 double CovalentPotential::computePotential() {
     if (withangle) {
-        return bonds->computePotential() + angles->computePotential() + dihedral->computePotential();
+        potential = bonds->computePotential() + angles->computePotential() + dihedral->computePotential();
+        return potential;
     }
-    return bonds->computePotential() + dihedral->computePotential();
+    potential = bonds->computePotential() + dihedral->computePotential();
+    return potential;
 }
 
 double CovalentPotential::computeForceMagnitude() {

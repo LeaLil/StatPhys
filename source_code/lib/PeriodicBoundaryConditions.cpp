@@ -21,14 +21,6 @@ void PeriodicBoundaryConditions::recenterAtoms(int nat, std::vector<double>& pos
         inverseBoxLength[i] = 1. / box[i];
         boxCenter[i] = origin[i] + box[i] / 2.;
     }
-    for (int j = 0; j < nat; j++) {
-        int j3 = 3 * j;
-        for (int i = 0; i < 3; i++) {
-            double xh = (positions[j3 + i] - boxCenter[i]) * inverseBoxLength[i];
-            positions[j3 + i] -= nearestInteger(xh) * box[i];
-        }
-    }
-
     for(Molecule m: moleculeList) {
         for(Element e: m.elementList) {
             //Lalalala... Ja, ich weiss, dass sieht schlecht aus :-)

@@ -13,7 +13,7 @@ CoordinatesAndVelocitiesInitializer::CoordinatesAndVelocitiesInitializer(MDRunOu
           fileName(coordinatesFileName) {
 }
 
-void CoordinatesAndVelocitiesInitializer::initialize(std::vector<double> &positions, std::vector<double> &velocities, std::vector<Molecule> &moleculeList) {
+void CoordinatesAndVelocitiesInitializer::initialize(std::vector<double> &positions, std::vector<double> &velocities, std::vector<Molecule> &moleculeList, System& s) {
     output.printXVInitializationHeader();
     if (par.xvInitialization != InitialXVGenerator::generateInitialX) {
         fin.open(fileName, std::ios::in);
@@ -116,6 +116,7 @@ void CoordinatesAndVelocitiesInitializer::initialize(std::vector<double> &positi
         Element createdElement;
         createdElement.position = Point(positions[i], positions[i + 1], positions[i + 2]);
         createdElement.weight = par.atomicMass;
+        createdElement.velocityVector = Point(velocities[i], velocities[i+1], velocities[i+2]);
         elementList.push_back(createdElement);
     }
     /* Make diatomic molecules (e.g N_2) for the moment */
@@ -128,7 +129,8 @@ void CoordinatesAndVelocitiesInitializer::initialize(std::vector<double> &positi
         std::vector<Element> a;
         a.push_back(e1);
         a.push_back(e2);
-        Molecule m = Molecule(a);
+        Molecule m = Molecule(a, s);
+        moleculeList.push_back(m);
     }
 }
 

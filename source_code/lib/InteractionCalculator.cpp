@@ -29,20 +29,16 @@ void InteractionCalculator::initializeValues() {
 void InteractionCalculator::calculate(const std::vector<double>& positions, std::vector<double>& forces, std::vector<Molecule>& moleculeList) {
     resetVariablesToZero(forces);
 
-    for (int i = 0; i < par.numberAtoms - 1; i++) {
-        for (int j = i + 1; j < par.numberAtoms; j++) {
-            calculateInteraction(i, j, positions, forces);
-        }
-    }
-    virial /= 2.;
-
     //TODO: Interactions for molecules:
-
     for(int i = 0; i < moleculeList.size(); i++) {
-        for(int j = i; j < moleculeList.size(); j++) {
-            moleculeList[i].calculateInteraction(moleculeList[j], par);
+        for(int j = i+1; j < moleculeList.size(); j++) {
+            potentialEnergy += moleculeList[i].calculateInteraction(moleculeList[j], par);
         }
     }
+
+    virial /= 2; //TODO: Explain please
+
+
 }
 
 
@@ -58,7 +54,9 @@ void InteractionCalculator::resetVariablesToZero(std::vector<double>& forces) {
 void InteractionCalculator::calculateInteraction(int i, int j, const std::vector<double>& positions,
                                                  std::vector<double>& forces) {
     applyPeriodicBoundaryConditions(i, j, positions);
+
     calculateSquaredDistance();
+
     if (rij2 < rcutf2) {
         calculatePotentialAndForceMagnitude();
         potentialEnergy += eij;

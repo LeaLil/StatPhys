@@ -22,8 +22,8 @@ class MDSimulation {
     void performSimulation(const std::string& parFile, std::string coordFile = "");
     /*! Perform a simulation based parameters and an (optional) coordinate file. */
     void performSimulation(const MDParameters& par, std::string coordinateFile = "");
-
-  private:
+    System s;
+private:
     void prepareRun();
     void checkParameterValidity();
     void initializeCoordinatesAndVelocities(const std::string& coordinateFile);

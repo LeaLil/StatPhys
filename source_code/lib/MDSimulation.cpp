@@ -6,16 +6,18 @@
 #include "ParameterValidityChecker.h"
 #include "RandomNumberGenerator.h"
 
-MDSimulation::MDSimulation(std::ostream& outputStream)
-  : output(outputStream) {
+MDSimulation::MDSimulation(std::ostream &outputStream)
+        : output(outputStream) {
 }
 
-void MDSimulation::performSimulation(const std::string& parameterFile, std::string coordinateFile) {
+void MDSimulation::performSimulation(const std::string &parameterFile, std::string coordinateFile) {
     MDParameters par = ParameterIO::readParameters(parameterFile);
+    s.mdParameters = &par;
+
     performSimulation(par, coordinateFile);
 }
 
-void MDSimulation::performSimulation(const MDParameters& par, std::string coordinateFile) {
+void MDSimulation::performSimulation(const MDParameters &par, std::string coordinateFile) {
     parameters = par;
     prepareRun();
     checkParameterValidity();
@@ -38,10 +40,11 @@ void MDSimulation::checkParameterValidity() {
     }
 }
 
-void MDSimulation::initializeCoordinatesAndVelocities(const std::string& coordinateFile) {
+void MDSimulation::initializeCoordinatesAndVelocities(const std::string &coordinateFile) {
     CoordinatesAndVelocitiesInitializer xvInitializer(output, parameters, coordinateFile);
+    s.boxLength = Point(parameters.boxSize[0], parameters.boxSize[1], parameters.boxSize[2]);
+    xvInitializer.initialize(positions, velocities, moleculeList, s);
 
-    xvInitializer.initialize(positions, velocities, moleculeList);
 }
 
 void MDSimulation::executeMDIterations() {
@@ -49,8 +52,7 @@ void MDSimulation::executeMDIterations() {
     trajectoryWriter.writeBeforeRun();
 
     timer.mdStart();
-    std::vector<Molecule> moleculeList;
-    MDRun mdRun(parameters, output, trajectoryWriter, moleculeList);
+    MDRun mdRun(parameters, output, s, trajectoryWriter, moleculeList);
     mdRun.run(positions, velocities);
     timer.mdEnd();
 

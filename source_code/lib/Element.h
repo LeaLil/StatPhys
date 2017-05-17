@@ -14,11 +14,14 @@ public:
     virtual ~Element();
 
 public:
-    double weight;
+    double weight = 1;
     std::vector<Element> bondedWith;
 
     Point position;
+    Point appliedForce;
+    Point velocityVector = Point(0,0,0);
 
+    double charge = 1.0;
 
 };
 

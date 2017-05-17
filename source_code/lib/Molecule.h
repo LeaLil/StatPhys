@@ -10,22 +10,26 @@
 #include "Point.h"
 #include "Element.h"
 #include "MDParameters.h"
+#include "System.h"
 
 class Molecule {
 
 
 public:
-    Molecule(std::vector<Element> elementList);
+    Molecule(std::vector<Element> elementList, System& s);
+    System& s;
 
     std::vector<Element> elementList;
 
     Point computeGravityCenter();
     double computeDistanceToMolecule(Molecule& m);
-    void calculateInteraction(Molecule& m, const MDParameters& mdParameters);
+    double calculateInteraction(Molecule& m, const MDParameters& mdParameters);
 
     virtual ~Molecule();
 
     void applyBoundaryCondition(Molecule &m);
+
+    void applyForces(const MDParameters &mdParameters, double d);
 };
 
 
