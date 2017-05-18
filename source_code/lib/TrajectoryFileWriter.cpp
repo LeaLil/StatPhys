@@ -11,9 +11,9 @@ using namespace std;
 TrajectoryFileWriter::TrajectoryFileWriter(const MDParameters &parameters,
                                            std::string finalCoordFilename,
                                            std::string trajFilename)
-  : par(parameters),
-    finalCoordinatesFilename(finalCoordFilename),
-    trajectoryCoordinatesFilename(trajFilename) {
+        : par(parameters),
+          finalCoordinatesFilename(finalCoordFilename),
+          trajectoryCoordinatesFilename(trajFilename) {
 }
 
 void TrajectoryFileWriter::writeBeforeRun() {
@@ -27,74 +27,87 @@ void TrajectoryFileWriter::writeBeforeRun() {
     }
 }
 
-void TrajectoryFileWriter::writeFinalCoordinates(const std::vector<double>& positions,
-                                                 const std::vector<double>& velocities) {
+void TrajectoryFileWriter::writeFinalCoordinates(std::vector<Molecule> &moleculeList){
     if (par.finalXVOutput == FinalCoordinateFileFormat::ascii) {
-        writeFinalCoordinatesInAsciiForm(positions, velocities);
-    }
-    else {
-        writeFinalCoordinatesInBinaryForm(positions, velocities);
+        writeFinalCoordinatesInAsciiForm(moleculeList);
+    } else {
+        writeFinalCoordinatesInBinaryForm(moleculeList);
     }
 }
 
-void TrajectoryFileWriter::writeFinalCoordinatesInBinaryForm(const std::vector<double>& positions,
-                                                             const std::vector<double>& velocities) {
+void TrajectoryFileWriter::writeFinalCoordinatesInBinaryForm(std::vector<Molecule> &moleculeList) {
     ofstream fout2;
     fout2.open(finalCoordinatesFilename, ios::out | ios::binary);
     if (fout2.bad()) {
         throw std::runtime_error("can't open " + finalCoordinatesFilename);
     }
     fout2.write(par.title.c_str(), MAXTITLE);
-    BinaryIO::write(fout2, positions);
-    BinaryIO::write(fout2, velocities);
+    for ( Molecule &m: moleculeList) {
+        for (Element &e: m.elementList) {
+
+            BinaryIO::write(fout2, e.position.getAsArray());
+            BinaryIO::write(fout2, e.velocityVector.getAsArray());
+        }
+    }
 }
 
-void TrajectoryFileWriter::writeFinalCoordinatesInAsciiForm(const std::vector<double>& positions,
-                                                            const std::vector<double>& velocities) {
+void TrajectoryFileWriter::writeFinalCoordinatesInAsciiForm(std::vector<Molecule> &moleculeList) {
     ofstream fout2;
     fout2.open(finalCoordinatesFilename, ios::out);
     if (fout2.bad()) {
         throw std::runtime_error("can't open " + finalCoordinatesFilename);
     }
-    fout2 << par.title << "\n" ;
-    fout2 << par.numberAtoms << "\n" ;
-    for (int j = 0; j < par.numberAtoms; j++) {
-        fout2 << setw(6) << j;
-        for (int m = 0; m < 3; m++) {
-            fout2 << setw(15) << positions[3 * j + m];
+    fout2 << par.title << "\n";
+    fout2 << par.numberAtoms << "\n";
+
+    for (Molecule &m : moleculeList) {
+        for (Element &element: m.elementList) {
+            fout2 << setw(15) << element.position.x;
+            fout2 << setw(15) << element.position.y;
+            fout2 << setw(15) << element.position.z;
+
+
+            fout2 << setw(15) << element.velocityVector.x;
+            fout2 << setw(15) << element.velocityVector.y;
+            fout2 << setw(15) << element.velocityVector.z;
+
+
+            fout2 << "\n";
         }
-        for (int m = 0; m < 3; m++) {
-            fout2 << setw(15) << velocities[3 * j + m];
-        }
-        fout2 << "\n";
     }
 }
 
-void TrajectoryFileWriter::writeOutTrajectoryStep(const std::vector<double>& positions) {
+void TrajectoryFileWriter::writeOutTrajectoryStep(std::vector<Molecule> &positions) {
     if (par.trajectoryOutput) {
-        if (par.trajectoryOutputFormat == TrajectoryFileFormat::binary) {
-            writeOutTrajectoryStepInBinaryForm(positions);
-        } else if (par.trajectoryOutputFormat == TrajectoryFileFormat::ascii) {
-            writeOutTrajectoryStepInAsciiForm(positions);
+
+        for (Molecule &m: positions) {
+            for (Element &e: m.elementList) {
+                if (par.trajectoryOutputFormat == TrajectoryFileFormat::binary) {
+                    writeOutTrajectoryStepInBinaryForm(e.position);
+                } else if (par.trajectoryOutputFormat == TrajectoryFileFormat::ascii) {
+                    writeOutTrajectoryStepInAsciiForm(e.position);
+                }
+            }
         }
     }
 }
 
-void TrajectoryFileWriter::writeOutTrajectoryStepInBinaryForm(const std::vector<double>& positions) {
+void TrajectoryFileWriter::writeOutTrajectoryStepInBinaryForm(Point &point) {
     ofstream fileBW;
     fileBW.open(trajectoryCoordinatesFilename, ios::out | ios::app | ios::binary);
     if (fileBW.bad()) {
         throw runtime_error("I/O ERROR: cannot write to file: " + trajectoryCoordinatesFilename);
     }
-    BinaryIO::write(fileBW, positions);
+    BinaryIO::write(fileBW, point.getAsArray());
 }
 
-void TrajectoryFileWriter::writeOutTrajectoryStepInAsciiForm(const std::vector<double>& positions) {
+void TrajectoryFileWriter::writeOutTrajectoryStepInAsciiForm(Point& point) {
     ofstream fileFW;
     fileFW.open(trajectoryCoordinatesFilename, ios::out | ios::app);
     if (fileFW.bad()) {
         throw runtime_error("I/O ERROR: cannot write to file: " + trajectoryCoordinatesFilename);
     }
+    /*
     int ntot = 3 * par.numberAtoms;
     for (int i = 0; i < ntot; i += 10) {
         for (int j = i; (j < i + 10 && j < ntot); j++) {
@@ -102,4 +115,5 @@ void TrajectoryFileWriter::writeOutTrajectoryStepInAsciiForm(const std::vector<d
         }
         fileFW << endl;
     }
+     */
 }

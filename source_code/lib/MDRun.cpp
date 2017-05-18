@@ -4,18 +4,22 @@
 #include "TrajectoryFileWriter.h"
 #include <cmath>
 
-MDRun::MDRun(const MDParameters& parameters, MDRunOutput& out, System& s, TrajectoryFileWriter& trajectoryFileWriter, std::vector<Molecule>& moleculeList)
-  : par(parameters),
-    output(out),
-    s(s),
-    trajectoryWriter(trajectoryFileWriter),
-    forceCalculator(parameters),
-    radialDistribution(parameters.numberRadialDistrPoints, parameters.radialDistrCutoffRadius), moleculeList(moleculeList) {
+MDRun::MDRun(const MDParameters &parameters, MDRunOutput &out, System &s, TrajectoryFileWriter &trajectoryFileWriter,
+             std::vector<Molecule> &moleculeList)
+        : par(parameters),
+          output(out),
+          s(s),
+          trajectoryWriter(trajectoryFileWriter),
+          forceCalculator(parameters),
+          radialDistribution(parameters.numberRadialDistrPoints, parameters.radialDistrCutoffRadius),
+          moleculeList(moleculeList) {
 }
 
 void MDRun::run(std::vector<double> &x, std::vector<double> &v) {
     forces.resize(x.size());
+
     synchronizedPositions.resize(x.size());
+
     radialDistribution.setZero();
 
     initializeVariables();
@@ -59,26 +63,33 @@ void MDRun::initializeVariables() {
         averages[i] = 0.;
         fluctuations[i] = 0.;
     }
+    s.virial = 0;
+    s.cutoffRadiusSquared = par.radialDistrCutoffRadius * par.radialDistrCutoffRadius;
 }
 
-void MDRun::initializeTemperature(const std::vector<double>& velocities) {
-    double kineticEnergy = 0;
-    for (int j3 = 0; j3 < nat3; j3++) {
-        kineticEnergy += velocities[j3] * velocities[j3];
+void MDRun::initializeTemperature(const std::vector<double> &velocities) {
+    s.totalKineticEnergy = 0;
+    for (Molecule &m : moleculeList) {
+        for (Element &e: m.elementList) {
+            double sum = e.velocityVector.x * e.velocityVector.x + e.velocityVector.y * e.velocityVector.y +
+                         e.velocityVector.z * e.velocityVector.z;
+            sum *= e.weight * 0.5;
+            s.totalKineticEnergy += sum;
+        }
     }
-    kineticEnergy *= (par.atomicMass / 2.);
-    properties[1] = kineticEnergy;
+    properties[1] = s.totalKineticEnergy;
     if (par.mdType == SimulationType::constantTemperature) {
-        if (kineticEnergy < 1.e-6) {
+        if (s.totalKineticEnergy < 1.e-6) {
             ekg = ekin0;
-        }
-        else {
-            ekg = kineticEnergy;
+        } else {
+            ekg = s.totalKineticEnergy;
         }
     }
 }
 
-void MDRun::performStep(std::vector<double>& positions, std::vector<double>& velocities, std::vector<Molecule>& moleculeList, int nstep, double time) {
+void
+MDRun::performStep(std::vector<double> &positions, std::vector<double> &velocities, std::vector<Molecule> &moleculeList,
+                   int nstep, double time) {
     /* put atoms in central periodic box */
     PeriodicBoundaryConditions::recenterAtoms(par.numberAtoms, positions, par.boxSize, moleculeList);
 
@@ -86,10 +97,18 @@ void MDRun::performStep(std::vector<double>& positions, std::vector<double>& vel
      * and contribution to the radial distribution function for the whole system
      * Doesn't apply anything! Just computes stuff!
      */
+    s.totalPotentialEnergy = 0;
+    s.virial = 0;
     forceCalculator.calculate(positions, forces, moleculeList);
     radialDistribution.addInstantaneousDistribution(forceCalculator.getInstantaneousRadialDistribution());
-    properties[3] = forceCalculator.getVirial();
-    properties[2] = forceCalculator.getPotentialEnergy();
+
+
+    s.virial /= 2;
+    s.totalPotentialEnergy = forceCalculator.getPotentialEnergy();
+
+
+    properties[3] = s.virial;
+    properties[2] = s.totalPotentialEnergy;
 
     /* determine velocity scaling factor, when coupling to a bath */
     double scal = 1;
@@ -104,17 +123,15 @@ void MDRun::performStep(std::vector<double>& positions, std::vector<double>& vel
      */
     s.oldTotalKineticEnergy = 0.;
     s.totalKineticEnergy = 0.;
-
-
     /* Do the same for molecule list; */
-    for(Molecule& m : moleculeList) {
+    for (Molecule &m : moleculeList) {
         m.applyForces(par, scal);
     }
 
-    properties[1] = s.oldTotalKineticEnergy;
+    properties[1] = s.totalKineticEnergy;
     properties[0] = properties[1] + properties[2];
-    properties[4] = 2 * (s.totalKineticEnergy - properties[3]) / (vol*3.);
-    properties[5] = scal;
+    properties[4] = 2 * (s.totalKineticEnergy - s.virial) / (vol * 3.); //Compute new pressurce
+    properties[5] = scal; //Save scal for no obv. reason
     if (par.mdType == SimulationType::constantTemperature) {
         ekg = s.oldTotalKineticEnergy;
     }
@@ -128,9 +145,10 @@ void MDRun::performStep(std::vector<double>& positions, std::vector<double>& vel
     printOutputForStep(positions, velocities, nstep, time);
 }
 
-void MDRun::printOutputForStep(const std::vector<double> &positions, const std::vector<double> &velocities, int nstep, double time) {
+void MDRun::printOutputForStep(const std::vector<double> &positions, const std::vector<double> &velocities, int nstep,
+                               double time) {
     if ((nstep + 1) == (nstep + 1) / par.trajectoryOutputInterval * par.trajectoryOutputInterval) {
-        trajectoryWriter.writeOutTrajectoryStep(positions);
+        trajectoryWriter.writeOutTrajectoryStep(moleculeList);
     }
 
     if (nstep == (nstep + 1) / nhpr * nhpr) {
@@ -166,6 +184,6 @@ void MDRun::printAverages(double time) {
     output.printAverageAndRMSTemperature(averages[1] / fac, fluctuations[1] / fac);
 }
 
-const AveragedRadialDistribution& MDRun::getRadialDistribution() const {
+const AveragedRadialDistribution &MDRun::getRadialDistribution() const {
     return radialDistribution;
 }

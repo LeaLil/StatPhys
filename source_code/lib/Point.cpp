@@ -3,6 +3,7 @@
 //
 
 #include <cmath>
+#include <vector>
 #include "Point.h"
 
 
@@ -67,6 +68,16 @@ Point &Point::operator-=(const Point point1) {
     return *this;
 }
 
+
+std::vector<double> Point::getAsArray(){
+    std::vector<double> array({x,y,z});
+    return array;
+}
+Point::Point( const Point &obj){
+    x = obj.x;
+    y = obj.y;
+    z = obj.z;
+}
 double& Point::getPointByNumber(int i) {
         switch(i){
 

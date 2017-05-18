@@ -5,6 +5,7 @@
 #ifndef MDATOM_POINT_H
 #define MDATOM_POINT_H
 
+#include <vector>
 
 class Point {
 
@@ -28,13 +29,14 @@ public:
     double& getPointByNumber(int i);
 
     virtual ~Point();
-
+    Point( const Point &obj);  // copy constructor
 
     double x;
     double y;
     double z;;
 
     double computeLength();
+    std::vector<double> getAsArray();
 };
 
 

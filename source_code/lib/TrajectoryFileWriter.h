@@ -2,6 +2,7 @@
 #define TRAJECTORYFILEWRITER_H
 
 #include "MDParameters.h"
+#include "Molecule.h"
 #include <string>
 #include <vector>
 
@@ -14,14 +15,14 @@ class TrajectoryFileWriter {
                          std::string finalCoordFilename,
                          std::string trajFilename);
     void writeBeforeRun();
-    void writeFinalCoordinates(const std::vector<double>& positions, const std::vector<double>& velocities);
-    void writeOutTrajectoryStep(const std::vector<double>& positions);
+    void writeFinalCoordinates(std::vector<Molecule>& moleculeLIst);
+    void writeOutTrajectoryStep(std::vector<Molecule>& moleculeLIst);
 
   private:
-    void writeFinalCoordinatesInBinaryForm(const std::vector<double>& positions, const std::vector<double>& velocities);
-    void writeFinalCoordinatesInAsciiForm(const std::vector<double>& positions, const std::vector<double>& velocities);
-    void writeOutTrajectoryStepInBinaryForm(const std::vector<double>& positions);
-    void writeOutTrajectoryStepInAsciiForm(const std::vector<double>& positions);
+    void writeFinalCoordinatesInBinaryForm(std::vector<Molecule>& moleculeLIst);
+    void writeFinalCoordinatesInAsciiForm(std::vector<Molecule>& moleculeLIst);
+    void writeOutTrajectoryStepInBinaryForm(Point& p);
+    void writeOutTrajectoryStepInAsciiForm(Point& point);
 
     const MDParameters& par;
     const std::string finalCoordinatesFilename;

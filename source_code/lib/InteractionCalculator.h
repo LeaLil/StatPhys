@@ -20,23 +20,15 @@ class InteractionCalculator{
     explicit InteractionCalculator(const MDParameters& parameters);
     void calculate(const std::vector<double>& positions, std::vector<double>& forces, std::vector<Molecule>& moleculeList);
     double getPotentialEnergy() const;
-    double getVirial() const;
     const InstantaneousRadialDistribution& getInstantaneousRadialDistribution() const;
 
   private:
     void initializeValues();
     void resetVariablesToZero(std::vector<double>& forces);
-    void applyPeriodicBoundaryConditions(int i, int j, const std::vector<double>& positions);
-    void calculateSquaredDistance();
-    void calculatePotentialAndForceMagnitude();
-    void calculateForceAndVirialContributions(int i, int j, std::vector<double>& forces);
-    void calculateInteraction(int i, int j, const std::vector<double>& positions, std::vector<double>& forces);
-
     const MDParameters& par;
     InstantaneousRadialDistribution radialDistribution;
 
     double potentialEnergy;
-    double virial;
 
     double inverseBoxLength[3]; // Inverse box length
     double rcutf2; // long-range interaction cut-off (squared)

@@ -9,5 +9,4 @@
 -> coulomb intramolekular, wie werden Ladungen berechnet?
 
 
-
--> Molecules und periodicBoundary?!?
+-> Virial: Intra/Inter Molekular?

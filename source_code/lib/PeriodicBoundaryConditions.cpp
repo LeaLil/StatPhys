@@ -35,6 +35,4 @@ void PeriodicBoundaryConditions::recenterAtoms(int nat, std::vector<double>& pos
         }
 
     }
-
-    //TODO something smart... Don't forget to ask questions
 }

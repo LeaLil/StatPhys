@@ -6,13 +6,14 @@
 #include "Element.h"
 #include "TotalPotential.h"
 #include "MorsePotential.h"
+#include "InstantaneousRadialDistribution.h"
 
 inline int nearestInteger(double x) {
     return x > 0 ? static_cast<int>(x + 0.5) : static_cast<int>(x - 0.5);
 }
 
 
-Molecule::Molecule(std::vector<Element> elementList, System& s) : elementList(elementList), s(s) {}
+Molecule::Molecule(std::vector<Element> elementList, System &s) : elementList(elementList), s(s) {}
 
 Point Molecule::computeGravityCenter() {
     Point gravityCenter;
@@ -38,35 +39,37 @@ double Molecule::computeDistanceToMolecule(Molecule &m) {
  * Saves the appliedForced in e.applicedForce
  * Take boundary condition into account.
  */
-double Molecule::calculateInteraction(Molecule &m, const MDParameters &mdParameters) {
+double Molecule::calculateInteraction(Molecule &m, const MDParameters &mdParameters,
+                                      InstantaneousRadialDistribution &radialDistribution) {
     double interMolecular = 0.;
     double intraMolecular = 0.;
 
-    //Apply boundary condition
 
     Point inversePoint = s.boxLength.getInversePoint();
-    double inverseBoxLength[3] = {inversePoint.x, inversePoint.y, inversePoint.z};
-        
+
     for (Element e : elementList) {
         for (Element e2 : m.elementList) {
 
-            //TODO Apply boundary condition here
             //Apply boundary conditions
             Point delta = (e.position - e2.position);
 
             double x = nearestInteger(delta.x * inversePoint.x) * mdParameters.boxSize[0];
             double y = nearestInteger(delta.y * inversePoint.y) * mdParameters.boxSize[1];
             double z = nearestInteger(delta.z * inversePoint.z) * mdParameters.boxSize[2];
-            delta -= Point(x, y, z );
-
-
-
+            delta -= Point(x, y, z);
             //End apply boundary conditions
+
+
             double r = delta.computeLength();
-          /*  LJPotential lj = LJPotential(r, mdParameters.sigmaLJ,
+            if (s.isOutOfRadius(r)) {
+                continue;
+            }
+
+            /*  LJPotential lj = LJPotential(r, mdParameters.sigmaLJ,
                                        mdParameters.epsilonLJ); //You forgot a "public" beim Erben :-) Please don't use 1/0 for true/false
             */
-            MorsePotential hp = MorsePotential(r, mdParameters.equilibriumDistance, mdParameters.dissociationEnergy, mdParameters.inflexibility);
+            MorsePotential hp = MorsePotential(r, mdParameters.equilibriumDistance, mdParameters.dissociationEnergy,
+                                               mdParameters.inflexibility);
             CoulombPotential coulomb = CoulombPotential(r, e.charge, e2.charge);
 
             interMolecular += (hp.computePotential() + coulomb.computePotential());
@@ -75,13 +78,15 @@ double Molecule::calculateInteraction(Molecule &m, const MDParameters &mdParamet
             delta *= interMolecularForce;
             e.appliedForce += delta;
             e2.appliedForce -= delta;
+            s.virial -= (delta.x + delta.y + delta.z) * interMolecularForce;
+            radialDistribution.addPairAtSquaredDistance(r * r);
         }
     }
 
 
     /* Intramolekular */
     for (int i = 0; i < elementList.size(); i++) {
-        for (int j = i+1; j < elementList.size(); j++) {
+        for (int j = i + 1; j < elementList.size(); j++) {
             Element e1 = elementList[i];
             Element e2 = elementList[j];
 
@@ -89,10 +94,14 @@ double Molecule::calculateInteraction(Molecule &m, const MDParameters &mdParamet
             double x = nearestInteger(delta.x * inversePoint.x) * mdParameters.boxSize[0];
             double y = nearestInteger(delta.y * inversePoint.y) * mdParameters.boxSize[1];
             double z = nearestInteger(delta.z * inversePoint.z) * mdParameters.boxSize[2];
-            delta -= Point(x, y, z );
+            delta -= Point(x, y, z);
 
 
             double r = delta.computeLength();
+            if (s.isOutOfRadius(r)) {
+                continue;
+            }
+
             CovalentPotential cvp = CovalentPotential(r, mdParameters, true);
 
 
@@ -101,10 +110,13 @@ double Molecule::calculateInteraction(Molecule &m, const MDParameters &mdParamet
             delta *= intraMolecularForce;
             e1.appliedForce += delta;
             e2.appliedForce -= delta;
+            s.virial -= (delta.x + delta.y + delta.z) * intraMolecularForce;
+            radialDistribution.addPairAtSquaredDistance(r * r);
+
         }
     }
 
-    return interMolecular+ intraMolecular;
+    return interMolecular + intraMolecular;
 
 
     //Compute new distance
@@ -113,21 +125,23 @@ double Molecule::calculateInteraction(Molecule &m, const MDParameters &mdParamet
 }
 
 
-
 void Molecule::applyForces(const MDParameters &mdParameters, double d) {
-    for(Element& e : elementList) {
-        Point newVelocityVector = (e.velocityVector + e.appliedForce * (mdParameters.timeStep / e.weight))*d;
+
+    for (Element &e : elementList) {
         Point oldVelocityVector = e.velocityVector;
 
+        Point newVelocityVector = (oldVelocityVector + e.appliedForce * (mdParameters.timeStep / e.weight)) * d;
+
         s.oldTotalKineticEnergy += newVelocityVector * newVelocityVector * e.weight * 0.5;
-        s.totalKineticEnergy += (oldVelocityVector + newVelocityVector) * (oldVelocityVector + newVelocityVector) * (e.weight * 0.125);
+        s.totalKineticEnergy +=
+                (oldVelocityVector + newVelocityVector) * (oldVelocityVector + newVelocityVector) * (e.weight * 0.125);
 
 
         e.velocityVector = newVelocityVector;
-        e.position += newVelocityVector * s.mdParameters->timeStep;
+        e.position += newVelocityVector * mdParameters.timeStep;
 
         //Reset
-        e.appliedForce = Point(0,0,0);
+        e.appliedForce = Point(0, 0, 0);
     }
 }
 

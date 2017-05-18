@@ -57,7 +57,7 @@ void MDSimulation::executeMDIterations() {
     timer.mdEnd();
 
     printRadialDistribution(mdRun.getRadialDistribution());
-    trajectoryWriter.writeFinalCoordinates(positions, velocities);
+    trajectoryWriter.writeFinalCoordinates(moleculeList);
 }
 
 void MDSimulation::printRadialDistribution(const AveragedRadialDistribution &radialDistribution) {
@@ -65,7 +65,6 @@ void MDSimulation::printRadialDistribution(const AveragedRadialDistribution &rad
         int ngr = radialDistribution.getNumberBins();
         double dgr = radialDistribution.getBinSize();
         std::vector<double> gr = radialDistribution.calculateNormalizedDistribution(parameters.numberAtoms,
-                                                                                    parameters.boxSize[0] *
                                                                                     parameters.boxSize[1] *
                                                                                     parameters.boxSize[2]);
         output.printRadialDistribution(ngr, dgr, gr.data());
