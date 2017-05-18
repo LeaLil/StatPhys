@@ -37,8 +37,6 @@ void InteractionCalculator::calculate(const std::vector<double> &positions, std:
 }
 
 
-
-
 double InteractionCalculator::getPotentialEnergy() const {
     return potentialEnergy;
 }
