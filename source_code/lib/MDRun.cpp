@@ -19,7 +19,6 @@ void MDRun::run(std::vector<double> &x, std::vector<double> &v) {
     forces.resize(x.size());
 
     synchronizedPositions.resize(x.size());
-
     radialDistribution.setZero();
 
     initializeVariables();
@@ -44,9 +43,8 @@ void MDRun::initializeVariables() {
     fac = nat3 * boltzmannConstant / 2.;
     s.totalKineticEnergy = ekin0 = fac * par.targetTemperature;
     halfTimeStep = par.timeStep / 2;
-    dtm = par.timeStep / par.atomicMass;
     vol = par.boxSize[0] * par.boxSize[1] * par.boxSize[2];
-
+    s.boxLength = Point(par.boxSize[0], par.boxSize[1], par.boxSize[2]);
     nhpr = 100 * par.propertyPrintingInterval;
     nlsq = par.numberMDSteps / 10;
     if (nlsq < 10) {
@@ -71,8 +69,7 @@ void MDRun::initializeTemperature(const std::vector<double> &velocities) {
     s.totalKineticEnergy = 0;
     for (Molecule &m : moleculeList) {
         for (Element &e: m.elementList) {
-            double sum = e.velocityVector.x * e.velocityVector.x + e.velocityVector.y * e.velocityVector.y +
-                         e.velocityVector.z * e.velocityVector.z;
+            double sum = e.velocityVector * e.velocityVector;
             sum *= e.weight * 0.5;
             s.totalKineticEnergy += sum;
         }
@@ -100,10 +97,11 @@ MDRun::performStep(std::vector<double> &positions, std::vector<double> &velociti
     s.totalPotentialEnergy = 0;
     s.virial = 0;
     forceCalculator.calculate(positions, forces, moleculeList);
+    s.virial /= 2;
+
     radialDistribution.addInstantaneousDistribution(forceCalculator.getInstantaneousRadialDistribution());
 
 
-    s.virial /= 2;
     s.totalPotentialEnergy = forceCalculator.getPotentialEnergy();
 
 
@@ -123,8 +121,12 @@ MDRun::performStep(std::vector<double> &positions, std::vector<double> &velociti
      */
     s.oldTotalKineticEnergy = 0.;
     s.totalKineticEnergy = 0.;
+
+    for(Molecule&m : moleculeList) {
+        m.computeViral();
+    }
     /* Do the same for molecule list; */
-    for (Molecule &m : moleculeList) {
+    for (Molecule& m : moleculeList) {
         m.applyForces(par, scal);
     }
 
@@ -132,6 +134,8 @@ MDRun::performStep(std::vector<double> &positions, std::vector<double> &velociti
     properties[0] = properties[1] + properties[2];
     properties[4] = 2 * (s.totalKineticEnergy - s.virial) / (vol * 3.); //Compute new pressurce
     properties[5] = scal; //Save scal for no obv. reason
+
+
     if (par.mdType == SimulationType::constantTemperature) {
         ekg = s.oldTotalKineticEnergy;
     }
@@ -168,7 +172,7 @@ void MDRun::printOutputForStep(const std::vector<double> &positions, const std::
             synchronizedPositions[j3] = positions[j3] - velocities[j3] * halfTimeStep;
         }
         CenterOfMassCalculator cm;
-        cm.update(par.numberAtoms, synchronizedPositions, velocities, par.atomicMass);
+        cm.update(moleculeList);
         cm.printResults(output);
     }
 }

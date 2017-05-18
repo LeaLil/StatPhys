@@ -1,13 +1,13 @@
 # Title
-Test 3, 1000 atoms
+Test 3, 100 atoms
 #                 NumberAtoms                 AtomicMass                     MDType
                          1000                          1                          0
 #                  BoxSize(x)                 BoxSize(y)                 BoxSize(z)
                        10.436                     10.436                     10.436
 #               NumberMDSteps                InitialTime                   TimeStep
-                         1000                          0                      0.005
+                         100                          0                      0.005
 #          InitialTemperature          TargetTemperature    TemperatureCouplingTime
-                       120.27                     120.27                        0.1
+                            1                          1                        0.1
 #                  RandomSeed
                      10021988
 #            XVInitialization  CoordInitializationSpread              FinalXVOutput
@@ -21,6 +21,6 @@ Test 3, 1000 atoms
 #            TrajectoryOutput     TrajectoryOutputFormat   TrajectoryOutputInterval
                             0                          2                          5
 #               ForceConstant           EquilibriumAngle        EquilibriumDistance
-                          1.5                          2                          2
+                         0.438                          2                         0.1
 #          DissociationEnergy              Inflexibility
                         427                            0.001

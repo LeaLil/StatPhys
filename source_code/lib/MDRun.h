@@ -22,7 +22,7 @@ class MDRun {
     MDRun(const MDParameters& parameters, MDRunOutput& out, System& s, TrajectoryFileWriter& trajectoryFileWriter, std::vector<Molecule>& moleculeList);
     void run(std::vector<double> &x, std::vector<double> &v);
     const AveragedRadialDistribution& getRadialDistribution() const;
-    std::vector<Molecule> moleculeList;
+    std::vector<Molecule>& moleculeList;
   private:
     void initializeVariables();
     void initializeTemperature(const std::vector<double>& velocities);
@@ -49,7 +49,6 @@ class MDRun {
     double fac;
     double ekin0;
     double halfTimeStep;
-    double dtm;
     double vol;
     int nhpr;
     int nlsq;

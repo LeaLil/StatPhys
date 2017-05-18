@@ -119,6 +119,7 @@ void CoordinatesAndVelocitiesInitializer::initialize(std::vector<double> &positi
         createdElement.velocityVector = Point(velocities[i], velocities[i+1], velocities[i+2]);
         elementList.push_back(createdElement);
     }
+
     /* Make diatomic molecules (e.g N_2) for the moment */
     for (int i = 0; i < par.numberAtoms; i = i + 2) {
         Element e1 = elementList[i];
@@ -129,8 +130,7 @@ void CoordinatesAndVelocitiesInitializer::initialize(std::vector<double> &positi
         std::vector<Element> a;
         a.push_back(e1);
         a.push_back(e2);
-        Molecule m = Molecule(a, s);
-        moleculeList.push_back(m);
+        moleculeList.push_back(Molecule(a, s));
     }
 }
 

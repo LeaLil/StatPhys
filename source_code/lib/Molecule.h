@@ -25,12 +25,19 @@ public:
 
     Point computeGravityCenter();
     double computeDistanceToMolecule(Molecule& m);
-    double calculateInteraction(Molecule& m, const MDParameters& mdParameters, InstantaneousRadialDistribution& distribution);
+    double calculateInter(Molecule &m, const MDParameters &mdParameters,
+                          InstantaneousRadialDistribution &distribution);
+
+
+    double calculateIntra(const MDParameters &mdParameters,
+                          InstantaneousRadialDistribution &distribution);
 
     virtual ~Molecule();
 
 
     void applyForces(const MDParameters &mdParameters, double d);
+
+    void computeViral();
 };
 
 

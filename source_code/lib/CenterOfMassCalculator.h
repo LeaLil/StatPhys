@@ -3,27 +3,30 @@
 
 #include <vector>
 #include "MDRunOutput.h"
+#include "Molecule.h"
 
 /*!
  * This class calculates the center of mass and its velocity.
  */
 class CenterOfMassCalculator {
-  public:
+public:
     CenterOfMassCalculator(bool calculateCMPosition = true, bool calculateCMTranslation = true);
-    void update(int numberAtoms, const std::vector<double> &positions, const std::vector<double> &velocities, double atomicMass);
-    void printResults(MDRunOutput& output);
-    void getPosition(double x[]) const;
-    void getVelocity(double v[]) const;
-    double getKineticEnergy() const;
 
-  private:
-    void calculateCenterOfMassCoordinates(int numberAtoms, const std::vector<double>& positions, double atomicMass);
-    void calculateVelocityAndKineticEnergy(int numberAtoms, const std::vector<double>& velocities, double atomicMass);
+    void update(std::vector<Molecule> &moleculeList);
+
+    void printResults(MDRunOutput &output);
+
+private:
+    void calculateCenterOfMassCoordinates(std::vector<Molecule> &moleculeList);
+
+    void calculateVelocityAndKineticEnergy(std::vector<Molecule> &moleculeList);
+
+    Point averageVelocity;
+    Point centerOfMass;
+
 
     double totalMass;
     double ekcm;
-    double xcm[3];
-    double vcm[3];
     bool calculatePosition;
     bool calculateTranslation;
 };

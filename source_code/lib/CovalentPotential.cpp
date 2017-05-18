@@ -11,25 +11,26 @@ CovalentPotential::CovalentPotential(double r, MDParameters par, bool withangle)
 
     bonds = new HarmonicPotential(r, par.equilibriumDistance, par.forceConstant);
     angles = new HarmonicPotential(r, par.equilibriumDistance, par.forceConstant); //TODO: Spring constant same for Angles and bonds?
-    dihedral = new TorsionPotential(r, 1, par.equilibriumAngle); //TODO: implement omega and gamma in MDParameters
+    //dihedral = new TorsionPotential(r, 1, par.equilibriumAngle); //TODO: implement omega and gamma in MDParameters
 }
 
 double CovalentPotential::computePotential() {
+    withangle = false; //TODO entfernen
     if (withangle) {
-        potential = bonds->computePotential() + angles->computePotential() + dihedral->computePotential();
+        potential = bonds->computePotential() + angles->computePotential();
         return potential;
     }
-    potential = bonds->computePotential() + dihedral->computePotential();
+    potential = bonds->computePotential();
     return potential;
 }
 
 double CovalentPotential::computeForceMagnitude() {
-    return bonds->computeForceMagnitude() + angles->computeForceMagnitude() + dihedral->computeForceMagnitude();
+    return bonds->computeForceMagnitude() /*+ angles->computeForceMagnitude()*/;
 }
 
 CovalentPotential::~CovalentPotential() {
     delete bonds;
-    delete angles;
-    delete dihedral;
+    //delete angles;
+    //delete dihedral;
 
 }

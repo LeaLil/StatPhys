@@ -17,23 +17,20 @@ InteractionCalculator::InteractionCalculator(const MDParameters &parameters)
 }
 
 void InteractionCalculator::initializeValues() {
-    rcutf2 = par.interactionCutoffRadius * par.interactionCutoffRadius;
-    for (int m = 0; m < 3; m++)
-        inverseBoxLength[m] = 1.0 / par.boxSize[m];
+
 }
 
 void InteractionCalculator::calculate(const std::vector<double> &positions, std::vector<double> &forces,
                                       std::vector<Molecule> &moleculeList) {
     potentialEnergy = 0;
     radialDistribution.setZero();
-    //TODO: Interactions for molecules:
     for (int i = 0; i < moleculeList.size(); i++) {
         for (int j = i + 1; j < moleculeList.size(); j++) {
-            potentialEnergy += moleculeList[i].calculateInteraction(moleculeList[j], par, radialDistribution);
+            potentialEnergy += moleculeList[i].calculateInter(moleculeList[j], par,
+                                                              radialDistribution);
         }
+        potentialEnergy += moleculeList[i].calculateIntra(par, radialDistribution);
     }
-
-
 }
 
 

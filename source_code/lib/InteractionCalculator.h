@@ -30,18 +30,6 @@ class InteractionCalculator{
 
     double potentialEnergy;
 
-    double inverseBoxLength[3]; // Inverse box length
-    double rcutf2; // long-range interaction cut-off (squared)
-
-    // L-J parameters
-    double sig6;
-    double c6;
-    double c12;
-
-    double xij[3]; // Inter-particle vector
-    double rij2; // Inter-particle distance squared
-    double eij,
-            dij;
 };
 
 #endif // INTERACTIONCALCULATOR_H

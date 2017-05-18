@@ -13,8 +13,9 @@ Point::Point(double x, double y, double z) : x(x), y(y), z(z) {}
 
 
 Point Point::getInversePoint() {
-    return Point(1/x, 1/y, 1/z);
+    return Point(1. / x, 1. / y, 1. / z);
 }
+
 double Point::computeDistanceToOtherPoint(Point otherPoint) {
     double deltaX = otherPoint.x - x;
     double deltaY = otherPoint.y - y;
@@ -32,7 +33,7 @@ Point &Point::operator*=(const double multiplyByConstant) {
 }
 
 
-Point operator *(const Point &num1, const double factor) {
+Point operator*(const Point &num1, const double factor) {
     Point p;
     p.x = num1.x * factor;
     p.y = num1.y * factor;
@@ -41,9 +42,10 @@ Point operator *(const Point &num1, const double factor) {
 }
 
 
-double operator * (const Point &num1, const Point &num2) {
-    return num1.x * num2.x + num1.y * num2.y+ num1.z * num2.z;
+double operator*(const Point &num1, const Point &num2) {
+    return num1.x * num2.x + num1.y * num2.y + num1.z * num2.z;
 }
+
 Point operator-(const Point &num1, const Point &num2) {
     Point p = Point(num1.x - num2.x, num1.y - num2.y, num1.z - num2.z);
     return p;
@@ -61,6 +63,7 @@ Point &Point::operator+=(const Point point1) {
     z += point1.z;
     return *this;
 }
+
 Point &Point::operator-=(const Point point1) {
     x -= point1.x;
     y -= point1.y;
@@ -69,25 +72,26 @@ Point &Point::operator-=(const Point point1) {
 }
 
 
-std::vector<double> Point::getAsArray(){
-    std::vector<double> array({x,y,z});
+std::vector<double> Point::getAsArray() {
+    std::vector<double> array({x, y, z});
     return array;
 }
-Point::Point( const Point &obj){
+
+Point::Point(const Point &obj) {
     x = obj.x;
     y = obj.y;
     z = obj.z;
 }
-double& Point::getPointByNumber(int i) {
-        switch(i){
 
-            case 0:
-                return x;
-            case 1:
-                return y;
-            case 2:
-                return z;
-        }
+double &Point::getPointByNumber(int i) {
+    switch (i) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+    }
 
 }
 
@@ -98,5 +102,5 @@ Point::~Point() {
 }
 
 double Point::computeLength() {
-    return x*x + y*y + z*z;
+    return sqrt(x * x + y * y + z * z);
 }

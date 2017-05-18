@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <iomanip>
+#include <sstream>
 
 using namespace std;
 
@@ -28,11 +29,36 @@ void TrajectoryFileWriter::writeBeforeRun() {
 }
 
 void TrajectoryFileWriter::writeFinalCoordinates(std::vector<Molecule> &moleculeList){
-    if (par.finalXVOutput == FinalCoordinateFileFormat::ascii) {
+    //Write radius insetad
+    ofstream fout2;
+    fout2.open(finalCoordinatesFilename, ios::out | ios::binary);
+
+    fout2.precision(20);
+    int count = 0;
+
+    for(Molecule &molecule : moleculeList) {
+        fout2 << "Molekül: " << endl;
+        for(int i = 0; i < molecule.elementList.size(); i++) {
+
+            for(int j = i+1; j < molecule.elementList.size(); j++) {
+                ostringstream asdfasdf;
+
+                Point &point = molecule.elementList[i].position;
+                Point &p = molecule.elementList[j].position;
+                asdfasdf << setprecision(40) << point.computeDistanceToOtherPoint(p);
+                const string s = asdfasdf.str();
+                fout2 << s << endl;
+            }
+        }
+
+        count++; 
+    }
+    fout2.close();
+    /*if (par.finalXVOutput == FinalCoordinateFileFormat::ascii) {
         writeFinalCoordinatesInAsciiForm(moleculeList);
     } else {
         writeFinalCoordinatesInBinaryForm(moleculeList);
-    }
+    }*/
 }
 
 void TrajectoryFileWriter::writeFinalCoordinatesInBinaryForm(std::vector<Molecule> &moleculeList) {
@@ -49,6 +75,7 @@ void TrajectoryFileWriter::writeFinalCoordinatesInBinaryForm(std::vector<Molecul
             BinaryIO::write(fout2, e.velocityVector.getAsArray());
         }
     }
+    fout2.close();
 }
 
 void TrajectoryFileWriter::writeFinalCoordinatesInAsciiForm(std::vector<Molecule> &moleculeList) {

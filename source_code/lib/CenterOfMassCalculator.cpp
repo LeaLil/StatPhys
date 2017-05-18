@@ -1,75 +1,63 @@
 #include "CenterOfMassCalculator.h"
+#include "Molecule.h"
 #include <cmath>
+#include <vector>
 
 CenterOfMassCalculator::CenterOfMassCalculator(bool calculateCMPosition, bool calculateCMTranslation)
   :  calculatePosition(calculateCMPosition),
      calculateTranslation(calculateCMTranslation) {
 }
 
-void CenterOfMassCalculator::update(int numberAtoms, const std::vector<double>& positions,
-                                    const std::vector<double>& velocities, double atomicMass) {
-    totalMass = numberAtoms * atomicMass;
+void CenterOfMassCalculator::update(std::vector<Molecule>& moleculeList) {
+
+    totalMass = 0;
+    for(Molecule& m : moleculeList){
+        for(Element&e : m.elementList) {
+            totalMass += e.weight;
+        }
+    }
 
     if (calculatePosition) {
-        calculateCenterOfMassCoordinates(numberAtoms, positions, atomicMass);
+        calculateCenterOfMassCoordinates(moleculeList);
     }
 
     if (calculateTranslation) {
-        calculateVelocityAndKineticEnergy(numberAtoms, velocities, atomicMass);
+        calculateVelocityAndKineticEnergy(moleculeList);
     }
 }
 
-void CenterOfMassCalculator::calculateVelocityAndKineticEnergy(int numberAtoms, const std::vector<double>& velocities,
-                                                               double atomicMass) {
+void CenterOfMassCalculator::calculateVelocityAndKineticEnergy(std::vector<Molecule>& moleculeList) {
     ekcm = 0;
-    for (int m = 0; m < 3; m++)
-        vcm[m] = 0.;
 
-    for (int j = 0; j < 3 * numberAtoms; j += 3) {
-        for (int m = 0; m < 3; m++)
-            vcm[m] += atomicMass * velocities[j + m];
+    averageVelocity = Point(0,0,0);
+
+    for(Molecule& m : moleculeList) {
+        for(Element& e: m.elementList) {
+            averageVelocity += e.velocityVector * e.weight;
+        }
     }
-    for (int m = 0; m < 3; m++) {
-        vcm[m] /= totalMass;
-        ekcm += vcm[m] * vcm[m];
-    }
-    ekcm *= (totalMass / 2.);
+    averageVelocity = averageVelocity * (1./totalMass);
+    ekcm += averageVelocity * averageVelocity * totalMass * 0.5;
 }
 
-void CenterOfMassCalculator::calculateCenterOfMassCoordinates(int numberAtoms, const std::vector<double>& positions,
-                                                              double atomicMass) {
-    for (int m = 0; m < 3; m++)
-        xcm[m] = 0.;
+void CenterOfMassCalculator::calculateCenterOfMassCoordinates(std::vector<Molecule>& moleculeList) {
+    centerOfMass = Point(0,0,0);
 
-    for (int j = 0; j < 3 * numberAtoms; j += 3) {
-        for (int m = 0; m < 3; m++)
-            xcm[m] += atomicMass * positions[j + m];
+    for(Molecule& m : moleculeList) {
+        for(Element& e: m.elementList) {
+            centerOfMass += e.position * e.weight;
+        }
     }
-    for (int m = 0; m < 3; m++)
-        xcm[m] /= totalMass;
+    centerOfMass *= (1./totalMass);
 }
 
 void CenterOfMassCalculator::printResults(MDRunOutput &output) {
     if (calculatePosition) {
-        output.printCenterOfMassAndCoordinates(totalMass, xcm);
+        double t[3] = {centerOfMass.x, centerOfMass.y, centerOfMass.z};
+        output.printCenterOfMassAndCoordinates(totalMass,t);
         if (calculateTranslation) {
-            output.printCenterOfMassTranslation(vcm, ekcm);
+            double v[3] = {averageVelocity.x, averageVelocity.y, averageVelocity.z};
+            output.printCenterOfMassTranslation(v, ekcm);
         }
     }
 }
-
-void CenterOfMassCalculator::getPosition(double *x) const {
-    for (int i = 0; i < 3; ++i)
-        x[i] = xcm[i];
-}
-
-void CenterOfMassCalculator::getVelocity(double *v) const {
-    for (int i = 0; i < 3; ++i)
-        v[i] = vcm[i];
-}
-
-double CenterOfMassCalculator::getKineticEnergy() const {
-    return ekcm;
-}
-
-
