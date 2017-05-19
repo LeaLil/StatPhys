@@ -3,13 +3,17 @@
 //
 
 #include "CovalentPotential.h"
+#include "MorsePotential.h"
 
 
 CovalentPotential::CovalentPotential(double r, MDParameters par, bool withangle) : Potential(r),
                                                                                               par(par),
                                                                                               withangle(withangle) {
 
-    bonds = new HarmonicPotential(r, par.equilibriumDistance, par.forceConstant);
+   /*  bonds = new HarmonicPotential(r, par.equilibriumDistance, par.forceConstant);*/
+    bonds = new MorsePotential(r, par.equilibriumDistance, par.dissociationEnergy,
+                           par.inflexibility);
+
     angles = new HarmonicPotential(r, par.equilibriumDistance, par.forceConstant); //TODO: Spring constant same for Angles and bonds?
     //dihedral = new TorsionPotential(r, 1, par.equilibriumAngle); //TODO: implement omega and gamma in MDParameters
 }

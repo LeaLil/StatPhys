@@ -5,7 +5,8 @@
 #include "HarmonicPotential.h"
 
 double HarmonicPotential::computePotential() {
-    return (1./2.) * kr * (r - r0) * (r-r0);
+    potential = (1./2.) * kr * (r - r0) * (r-r0);
+    return potential;
 }
 
 HarmonicPotential::HarmonicPotential(double r, double r0, double kr) : Potential(r) {

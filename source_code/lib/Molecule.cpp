@@ -57,12 +57,10 @@ double Molecule::calculateInter(Molecule &m, const MDParameters &mdParameters,
                 continue;
             }
 
-/*              LJPotential hp = LJPotential(r, mdParameters.sigmaLJ,
-                                        mdParameters.epsilonLJ); //You forgot a "public" beim Erben :-) Please don't use 1/0 for true/false
-*/
+            LJPotential hp = LJPotential(r, mdParameters.sigmaLJ,
+                                         mdParameters.epsilonLJ); //You forgot a "public" beim Erben :-) Please don't use 1/0 for true/false
 
-            MorsePotential hp = MorsePotential(r, mdParameters.equilibriumDistance, mdParameters.dissociationEnergy,
-                                               mdParameters.inflexibility);
+
             CoulombPotential coulomb = CoulombPotential(r, e.charge, e2.charge);
 
             interMolecular += (hp.computePotential() + coulomb.computePotential());
@@ -90,38 +88,44 @@ double Molecule::calculateIntra(const MDParameters &mdParameters, InstantaneousR
     double intra = 0;
     Point inversePoint = s.boxLength.getInversePoint();
 
-    for (int i = 0; i < elementList.size(); i++) {
-        for (int j = i + 1; j < elementList.size(); j++) {
-            Element &e1 = elementList[i];
-            Element &e2 = elementList[j];
-
-            Point delta = (e1.position - e2.position);
-            double x = nearestInteger(delta.x * inversePoint.x) * s.boxLength.x;
-            double y = nearestInteger(delta.y * inversePoint.y) * s.boxLength.y;
-            double z = nearestInteger(delta.z * inversePoint.z) * s.boxLength.z;
-            delta -= Point(x, y, z);
+    for (int i = 1; i < elementList.size(); i++) {
+        Element &middleElement = elementList[i - 1];
+        Element &leftElement = elementList[i];
 
 
-            double r = delta.computeLength();
-            if (!s.isOutOfRadius(r)) {
+        Point deltaLeftMiddle = (middleElement.position - leftElement.position);
+        double x = nearestInteger(deltaLeftMiddle.x * inversePoint.x) * s.boxLength.x;
+        double y = nearestInteger(deltaLeftMiddle.y * inversePoint.y) * s.boxLength.y;
+        double z = nearestInteger(deltaLeftMiddle.z * inversePoint.z) * s.boxLength.z;
+        deltaLeftMiddle -= Point(x, y, z);
+        double rDeltaLeftMiddle = deltaLeftMiddle.computeLength();
+        HarmonicPotential harmonicLeftMiddle = HarmonicPotential(rDeltaLeftMiddle, mdParameters.equilibriumAngle,
+                                                                 mdParameters.forceConstant);
 
-                CovalentPotential cvp = CovalentPotential(r, mdParameters, true);
-                intra += cvp.computePotential();
-                double forceMagnitude = cvp.computeForceMagnitude();
-                delta *= forceMagnitude;
-                e1.appliedForce += delta;
-                e2.appliedForce -= delta;
-            }
+       /* LJPotential harmonicLeftMiddle =  LJPotential(rDeltaLeftMiddle, mdParameters.sigmaLJ, mdParameters.epsilonLJ);*/
+        if((i+1) < elementList.size()) {
+            //Not at end of list -> you can still compute the angle...
+            //Compute angle... and potential
+            double angle = 0;
+            Element &rightElement = elementList[i+1];
+        }
+
+
+        intra += harmonicLeftMiddle.computePotential();
+        double forceMagnitude = harmonicLeftMiddle.computeForceMagnitude();
+        deltaLeftMiddle *= forceMagnitude;
+
+        middleElement.appliedForce += deltaLeftMiddle;
+        leftElement.appliedForce -= deltaLeftMiddle;
 //radialDistribution.addPairAtSquaredDistance(r * r);
 
-        }
     }
     return intra;
 
 }
 
 void Molecule::computeViral() {
-    for(Element& e : elementList) {
+    for (Element &e : elementList) {
         s.virial -= (e.appliedForce * e.position);
     }
 }
@@ -144,8 +148,8 @@ void Molecule::applyForces(const MDParameters &mdParameters, double d) {
         //Reset
         e.appliedForce = Point(0, 0, 0);
     }
-    s.oldTotalKineticEnergy *= totalWeight*0.5;
-    s.totalKineticEnergy *= totalWeight*0.125;
+    s.oldTotalKineticEnergy *= totalWeight * 0.5;
+    s.totalKineticEnergy *= totalWeight * 0.125;
 }
 
 Molecule::~Molecule() {

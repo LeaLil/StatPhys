@@ -37,20 +37,18 @@ void TrajectoryFileWriter::writeFinalCoordinates(std::vector<Molecule> &molecule
     int count = 0;
     fout2 << "Radius;" << endl;
     for(Molecule &molecule : moleculeList) {
-        for(int i = 0; i < molecule.elementList.size(); i++) {
+        ostringstream asdfasdf;
 
-            for(int j = i+1; j < molecule.elementList.size(); j++) {
-                ostringstream asdfasdf;
+        for(int i = 1; i < molecule.elementList.size(); i++) {
+            Point &point = molecule.elementList[i].position;
+            Point &p = molecule.elementList[i-1].position;
 
-                Point &point = molecule.elementList[i].position;
-                Point &p = molecule.elementList[j].position;
-                asdfasdf << setprecision(40) << point.computeDistanceToOtherPoint(p);
-                const string s = asdfasdf.str();
-                fout2 << s << ";" << endl;
-            }
+            asdfasdf << setprecision(40) << point.computeDistanceToOtherPoint(p) << ";";
+
+
         }
-
-        count++; 
+        fout2 << asdfasdf.str()<< endl;
+        count++;
     }
     fout2.close();
     /*if (par.finalXVOutput == FinalCoordinateFileFormat::ascii) {

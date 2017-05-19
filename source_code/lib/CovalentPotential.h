@@ -16,7 +16,7 @@ class CovalentPotential : public Potential{
 public:
     bool withangle;
 
-    HarmonicPotential *bonds;
+    Potential *bonds;
     HarmonicPotential *angles;
     TorsionPotential *dihedral;
     MDParameters par;

@@ -120,16 +120,21 @@ void CoordinatesAndVelocitiesInitializer::initialize(std::vector<double> &positi
         elementList.push_back(createdElement);
     }
 
-    /* Make diatomic molecules (e.g N_2) for the moment */
-    for (int i = 0; i < par.numberAtoms; i = i + 2) {
+    //TODO You see what...
+    /* Make diatomic molecules (e.g 5C_) for the moment */
+    for (int i = 0; i < par.numberAtoms; i = i + 5) {
         Element e1 = elementList[i];
         Element e2 = elementList[i+1];
+        Element e3 = elementList[i+2];
+        Element e4 = elementList[i+3];
+        Element e5 = elementList[i+4];
 
-        e1.bondedWith = {e2};
-        e2.bondedWith = {e1};
         std::vector<Element> a;
         a.push_back(e1);
         a.push_back(e2);
+        a.push_back(e3);
+        a.push_back(e4);
+        a.push_back(e5);
         moleculeList.push_back(Molecule(a, s));
     }
 }
