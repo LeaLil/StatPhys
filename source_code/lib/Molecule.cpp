@@ -7,6 +7,7 @@
 #include "TotalPotential.h"
 #include "MorsePotential.h"
 #include "InstantaneousRadialDistribution.h"
+#include "AnglePotential.h"
 
 inline int nearestInteger(double x) {
     return x > 0 ? static_cast<int>(x + 0.5) : static_cast<int>(x - 0.5);
@@ -89,8 +90,8 @@ double Molecule::calculateIntra(const MDParameters &mdParameters, InstantaneousR
     Point inversePoint = s.boxLength.getInversePoint();
 
     for (int i = 1; i < elementList.size(); i++) {
-        Element &middleElement = elementList[i - 1];
-        Element &leftElement = elementList[i];
+        Element &middleElement = elementList[i];
+        Element &leftElement = elementList[i-1];
 
 
         Point deltaLeftMiddle = (middleElement.position - leftElement.position);
@@ -102,14 +103,22 @@ double Molecule::calculateIntra(const MDParameters &mdParameters, InstantaneousR
         HarmonicPotential harmonicLeftMiddle = HarmonicPotential(rDeltaLeftMiddle, mdParameters.equilibriumAngle,
                                                                  mdParameters.forceConstant);
 
-       /* LJPotential harmonicLeftMiddle =  LJPotential(rDeltaLeftMiddle, mdParameters.sigmaLJ, mdParameters.epsilonLJ);*/
+        //LJPotential harmonicLeftMiddle =  LJPotential(rDeltaLeftMiddle, mdParameters.sigmaLJ, mdParameters.epsilonLJ);*/
+
         if((i+1) < elementList.size()) {
             //Not at end of list -> you can still compute the angle...
             //Compute angle... and potential
-            double angle = 0;
             Element &rightElement = elementList[i+1];
-        }
 
+            AnglePotential ang = AnglePotential(leftElement.position, middleElement.position, rightElement.position, 0, mdParameters.equilibriumAngle, mdParameters.angleforceConstant);
+
+            double AnglePotEnery = ang.computePotential();
+            intra += AnglePotEnery;
+
+            Point af = ang.computeForce();
+            leftElement.appliedForce += af;
+            rightElement.appliedForce -= af;
+        }
 
         intra += harmonicLeftMiddle.computePotential();
         double forceMagnitude = harmonicLeftMiddle.computeForceMagnitude();

@@ -58,6 +58,7 @@ struct MDParameters {
     TrajectoryFileFormat trajectoryOutputFormat;
     int trajectoryOutputInterval;
     double forceConstant; //K_r
+    double angleforceConstant; //K_a
     double equilibriumAngle;
     double equilibriumDistance;
     double dissociationEnergy;

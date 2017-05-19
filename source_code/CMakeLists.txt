@@ -59,7 +59,7 @@ set(sources
         lib/PeriodicBoundaryConditions.cpp
         lib/CenterOfMassCalculator.cpp
         lib/RandomNumberGenerator.cpp
-        lib/Potential.cpp lib/HarmonicPotential.cpp lib/LJPotential.cpp lib/LJPotential.cpp lib/MorsePotential.cpp lib/TorsionPotential.cpp lib/CovalentPotential.cpp lib/TotalPotential.cpp lib/CoulombPotential.cpp lib/Element.cpp lib/Molecule.cpp lib/Point.cpp lib/System.cpp lib/System.h)
+        lib/Potential.cpp lib/HarmonicPotential.cpp lib/LJPotential.cpp lib/LJPotential.cpp lib/MorsePotential.cpp lib/TorsionPotential.cpp lib/CovalentPotential.cpp lib/TotalPotential.cpp lib/CoulombPotential.cpp lib/Element.cpp lib/Molecule.cpp lib/Point.cpp lib/System.cpp lib/System.h lib/AnglePotential.cpp lib/AnglePotential.h)
 
 add_library(mdatomLib ${sources} ${headers})
 set_target_properties(mdatomLib PROPERTIES POSITION_INDEPENDENT_CODE ON)

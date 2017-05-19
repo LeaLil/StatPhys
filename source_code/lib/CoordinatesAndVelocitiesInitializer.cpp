@@ -113,9 +113,10 @@ void CoordinatesAndVelocitiesInitializer::initialize(std::vector<double> &positi
     /*create molecule list*/
     std::vector<Element> elementList;
     for (int i = 0; i < nat3; i = i + 3) {
-        Element createdElement;
+        Element createdElement = Element();
         createdElement.position = Point(positions[i], positions[i + 1], positions[i + 2]);
         createdElement.weight = par.atomicMass;
+        createdElement.charge = 0.3;
         createdElement.velocityVector = Point(velocities[i], velocities[i+1], velocities[i+2]);
         elementList.push_back(createdElement);
     }

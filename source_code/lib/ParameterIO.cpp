@@ -84,7 +84,7 @@ MDParameters ParameterIO::readParameters(const std::string &fileName) {
 
     fin.ignore();
     getline(fin, dummy);
-    fin >> par.dissociationEnergy >> par.inflexibility;
+    fin >> par.dissociationEnergy >> par.inflexibility >> par.angleforceConstant;
     par.xvInitialization = initialXVGeneratorFromInt(ntxi);
     par.finalXVOutput = finalCoordinateFileFormatFromInt(ntxo);
     par.trajectoryOutput = ntwxm > 0;

@@ -32,6 +32,7 @@ MDParameters MDParameters::defaultParameters() {
     p.numberRadialDistrPoints = 100;
     p.radialDistrCutoffRadius = 2.5;
     p.forceConstant = 1; //Federkonstante, default value
+    p.angleforceConstant = 0;
     p.equilibriumAngle = 0;
     p.equilibriumDistance = 1;
     p.dissociationEnergy = 1;

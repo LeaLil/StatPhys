@@ -1,13 +1,13 @@
 # Title
 Test 3, 100 atoms
 #                 NumberAtoms                 AtomicMass                     MDType
-                         100                          1                          0
+                         1000                          1                          0
 #                  BoxSize(x)                 BoxSize(y)                 BoxSize(z)
                        10.436                     10.436                     10.436
 #               NumberMDSteps                InitialTime                   TimeStep
-                         10000                          0                      0.005
+                         100                          0                      0.005
 #          InitialTemperature          TargetTemperature    TemperatureCouplingTime
-                          0                         0                        0.1
+                          1                         1                        0.1
 #                  RandomSeed
                      10021988
 #            XVInitialization  CoordInitializationSpread              FinalXVOutput
@@ -22,5 +22,5 @@ Test 3, 100 atoms
                             0                          2                          5
 #               ForceConstant           EquilibriumAngle        EquilibriumDistance
                          0.438                          2                         0.1
-#          DissociationEnergy              Inflexibility
-                        427                            0.001
+#          DissociationEnergy              Inflexibility         AngleForceConstant
+                        427                            0.001                    200

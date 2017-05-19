@@ -12,6 +12,14 @@
 9.) r0 rausnehmen wo nicht nötig
 
 
+10.) Moleküle implementieren --> class Molecules
+
+11.) Fehler im Coulomb Potential?
+12.) Winkel Ableitung
+13.) Molecules anschauen und auschecken
+14.) Output bearbeiten
+
+
 99.) Auswertung
 
 
