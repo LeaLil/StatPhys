@@ -35,9 +35,8 @@ void TrajectoryFileWriter::writeFinalCoordinates(std::vector<Molecule> &molecule
 
     fout2.precision(20);
     int count = 0;
-
+    fout2 << "Radius;" << endl;
     for(Molecule &molecule : moleculeList) {
-        fout2 << "Molekül: " << endl;
         for(int i = 0; i < molecule.elementList.size(); i++) {
 
             for(int j = i+1; j < molecule.elementList.size(); j++) {
@@ -47,7 +46,7 @@ void TrajectoryFileWriter::writeFinalCoordinates(std::vector<Molecule> &molecule
                 Point &p = molecule.elementList[j].position;
                 asdfasdf << setprecision(40) << point.computeDistanceToOtherPoint(p);
                 const string s = asdfasdf.str();
-                fout2 << s << endl;
+                fout2 << s << ";" << endl;
             }
         }
 

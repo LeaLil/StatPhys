@@ -57,9 +57,10 @@ double Molecule::calculateInter(Molecule &m, const MDParameters &mdParameters,
                 continue;
             }
 
-            /*  LJPotential hp = LJPotential(r, mdParameters.sigmaLJ,
+/*              LJPotential hp = LJPotential(r, mdParameters.sigmaLJ,
                                         mdParameters.epsilonLJ); //You forgot a "public" beim Erben :-) Please don't use 1/0 for true/false
 */
+
             MorsePotential hp = MorsePotential(r, mdParameters.equilibriumDistance, mdParameters.dissociationEnergy,
                                                mdParameters.inflexibility);
             CoulombPotential coulomb = CoulombPotential(r, e.charge, e2.charge);
